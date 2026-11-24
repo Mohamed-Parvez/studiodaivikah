@@ -4,6 +4,7 @@ import Hero from "@/components/hero/hero";
 import Navbar from "@/components/nav/navbar";
 import Image from "next/image";
 import type { Metadata } from "next";
+import { staticImages } from "@/lib/staticImages";
 
 export const metadata: Metadata = {
   title: "Concept to Creation | Architecture & Interior Design",
@@ -27,7 +28,9 @@ export default function Home() {
       <div className="relative w-full h-[calc(100vh-80px)] min-h-[560px] max-h-[900px] sm:h-[750px] md:h-[820px] flex items-center justify-center overflow-hidden">
         <Image
           fill
-          src="/images/herobg.jpg"
+          src={staticImages.herobg.src}
+          placeholder="blur"
+          blurDataURL={staticImages.herobg.blurDataURL}
           alt="Hero Background"
           className="object-cover object-center"
           priority

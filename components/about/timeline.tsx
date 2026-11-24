@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import { staticImages } from "@/lib/staticImages";
 
 export default function Timeline() {
   const timelineData = [
@@ -10,7 +11,8 @@ export default function Timeline() {
       description:
         "Studio Daivikah is the vision of a passionate architect driven by the belief that great design goes beyond beauty - it must serve,inspire.",
       type: "milestone",
-      image: "/images/abt_pic_2.jpg",
+      image: staticImages.abtPic2.src,
+      blurDataURL: staticImages.abtPic2.blurDataURL,
     },
     {
       id: 2,
@@ -19,7 +21,8 @@ export default function Timeline() {
       description:
         "Welcome to a New Chapter in Living — Our First Residential Project in Madhavaram We are proud to introduce our very first residential venture in Madhavaram — a thoughtfully crafted community where comfort, connectivity, and contemporary design come together seamlessly. This milestone project marks the beginning of a vision to redefine urban living in one of Chennai’s most rapidly growing neighborhoods. Set amidst the calm yet well-connected streets of Madhavaram, the project offers the perfect balance of peaceful residential charm and urban accessibility. Every home is designed to reflect our core values — functionality, elegance, and enduring quality — while catering to the evolving lifestyles of modern families.",
       type: "completion",
-      image: "/images/abt_pic_3.jpg",
+      image: staticImages.abtPic3.src,
+      blurDataURL: staticImages.abtPic3.blurDataURL,
     },
     {
       id: 3,
@@ -28,7 +31,8 @@ export default function Timeline() {
       description:
         "Studio Daivikah expanded its services into commercial design,taking an office building and retail spaces.",
       type: "milestone",
-      image: "/images/abt_pic_4.jpg",
+      image: staticImages.abtPic4.src,
+      blurDataURL: staticImages.abtPic4.blurDataURL,
     },
   ];
 
@@ -66,6 +70,8 @@ export default function Timeline() {
                     <div className="relative w-full h-48 mb-4 rounded-lg overflow-hidden">
                       <Image
                         src={item.image}
+                        placeholder="blur"
+                        blurDataURL={item.blurDataURL}
                         alt={item.title}
                         fill
                         sizes="(max-width: 768px) 100vw, 500px"
@@ -107,6 +113,8 @@ export default function Timeline() {
                         <div className="relative w-full max-w-[500px] h-[300px] mb-6 mx-auto rounded-lg overflow-hidden">
                           <Image
                             src={item.image}
+                            placeholder="blur"
+                            blurDataURL={item.blurDataURL}
                             alt={item.title}
                             fill
                             sizes="500px"
@@ -181,6 +189,8 @@ export default function Timeline() {
                         <div className="relative w-full max-w-[500px] h-[300px] mx-auto rounded-lg overflow-hidden">
                           <Image
                             src={item.image}
+                            placeholder="blur"
+                            blurDataURL={item.blurDataURL}
                             alt={item.title}
                             fill
                             sizes="500px"
