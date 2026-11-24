@@ -51,14 +51,23 @@ const BlogContent = () => {
   };
 
   return (
-    <section className="w-full pt-20 flex flex-col items-center space-y-4">
+    <section className="w-full pt-20 flex flex-col items-center">
       <Navbar />
-      <h1 className="text-center text-black font-extrabold py-8 md:py-14 text-4xl md:text-6xl lg:text-7xl xl:text-8xl">
+
+      {/* Main Title */}
+      <h1 className="text-center font-extrabold text-[45px] sm:text-[80px] md:text-[110px] lg:text-[130px] text-black tracking-tight my-10">
         BLOG
       </h1>
 
-      {/* Portfolio Grid */}
-      <div className="max-w-7xl w-full my-14 px-4 md:px-10">
+      {/* Subtitle */}
+      <div className="w-full max-w-[1240px] text-center px-5 sm:px-10 mb-16">
+        <p className="text-base sm:text-lg md:text-xl text-gray-700 leading-relaxed font-light max-w-4xl mx-auto">
+          Insights, architectural musings, and stories from our studio and practice.
+        </p>
+      </div>
+
+      {/* Blog Grid */}
+      <div className="w-full max-w-[1240px] px-5 sm:px-10 mb-24">
         {loading ? (
           <div className="flex justify-center items-center h-64">
             {/* Spinner */}
@@ -69,28 +78,32 @@ const BlogContent = () => {
             <p className="text-gray-500 text-lg">No items to display</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-14 gap-6 w-full">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
             {allProjects.map((item) => (
               <div
                 key={item.id}
                 onClick={() => handleProjectClick(item.id)}
-                className="group cursor-pointer transition-transform duration-300 hover:scale-105"
+                className="group cursor-pointer transition-transform duration-300 hover:scale-[1.02] flex flex-col"
               >
-                <div className="relative overflow-hidden rounded-lg shadow-lg">
+                <div className="relative overflow-hidden rounded-xl shadow-md h-64 md:h-72 w-full bg-gray-100">
                   <img
                     src={item.image}
                     alt={item.title}
-                    className="w-full h-64 md:h-72 object-cover transition-transform duration-300 group-hover:scale-110"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
 
-                <div className="mt-3 text-start ml-6 max-w-[300px] flex-wrap w-full">
-                  <h3 className="text-[18px] md:text-base font-semibold text-gray-800 group-hover:text-black transition-colors duration-200">
-                    {item.title.toUpperCase()}
+                <div className="mt-4 text-start w-full">
+                  <h3 className="text-lg md:text-xl font-bold text-gray-900 group-hover:text-black transition-colors duration-200 uppercase leading-snug">
+                    {item.title}
                   </h3>
                   <div className="flex items-center gap-2 mt-2">
                     <span className="text-xs text-gray-500">
-                      {new Date(item.createdAt).toLocaleDateString()}
+                      {new Date(item.createdAt).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })}
                     </span>
                   </div>
                 </div>

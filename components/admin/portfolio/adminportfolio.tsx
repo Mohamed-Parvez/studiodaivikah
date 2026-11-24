@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Upload, Plus, Edit, Trash2, Save, X, FileText, Eye, EyeOff, Image as ImageIcon, Crop } from "lucide-react";
+import { Upload, Plus, Edit, Trash2, Save, X, FileText, Eye, EyeOff, Image as ImageIcon, Crop, ArrowLeft, ArrowRight } from "lucide-react";
 import ImageCropperModal from "../ImageCropperModal";
 
 type Project = {
@@ -62,11 +62,23 @@ const PortfolioManager: React.FC = () => {
     isOpen: boolean;
     imageUrl: string;
     targetProject?: Project | null;
+    targetBlogImageIndex?: number | null;
   }>({
     isOpen: false,
     imageUrl: "",
     targetProject: null,
+    targetBlogImageIndex: null,
   });
+
+  // Move / reorder blog image
+  const moveBlogImage = (fromIndex: number, toIndex: number) => {
+    setBlogFormData((prev) => {
+      const updated = [...prev.images];
+      const [moved] = updated.splice(fromIndex, 1);
+      updated.splice(toIndex, 0, moved);
+      return { ...prev, images: updated };
+    });
+  };
 
   const projectTypes = [
     "architecture",
@@ -634,13 +646,19 @@ const PortfolioManager: React.FC = () => {
             {/* Images Section */}
             <div>
               <div className="flex justify-between items-center mb-4">
-                <label className="block text-sm font-medium text-gray-700">
-                  Images ({blogFormData.images.length}/40)
-                </label>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Images ({blogFormData.images.length}/40)
+                  </label>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    Click &quot;Adjust&quot; on any image to crop, pan, zoom, or fit.
+                  </p>
+                </div>
                 <button
+                  type="button"
                   onClick={() => openCloudinaryWidget(true)}
                   disabled={blogFormData.images.length >= 40}
-                  className="bg-green-600 text-white px-3 py-1 text-sm rounded cursor-pointer hover:bg-green-700 disabled:opacity-50 flex items-center gap-1"
+                  className="bg-green-600 text-white px-3 py-1.5 text-sm rounded cursor-pointer hover:bg-green-700 disabled:opacity-50 flex items-center gap-1.5 transition"
                 >
                   <ImageIcon size={16} />
                   Add Images
@@ -648,20 +666,82 @@ const PortfolioManager: React.FC = () => {
               </div>
 
               {blogFormData.images.length > 0 && (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                   {blogFormData.images.map((image, index) => (
-                    <div key={index} className="relative">
-                      <img
-                        src={image}
-                        alt={`Blog image ${index + 1}`}
-                        className="w-full h-32 object-cover rounded-lg"
-                      />
-                      <button
-                        onClick={() => removeImage(index)}
-                        className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 hover:bg-red-700 cursor-pointer"
-                      >
-                        <X size={14} />
-                      </button>
+                    <div
+                      key={index}
+                      className="relative bg-gray-50 rounded-xl overflow-hidden border border-gray-200 shadow-sm flex flex-col transition-all"
+                    >
+                      <div className="relative aspect-video w-full bg-gray-200 overflow-hidden">
+                        <img
+                          src={image}
+                          alt={`Blog image ${index + 1}`}
+                          className="w-full h-full object-cover"
+                        />
+                        {/* Index Badge */}
+                        <div className="absolute top-2 left-2 z-10 flex items-center gap-1">
+                          <span className="bg-black/75 text-white text-[10px] font-semibold px-2 py-0.5 rounded shadow">
+                            #{index + 1}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Image Action Bar */}
+                      <div className="p-2 bg-white flex items-center justify-between gap-1 border-t border-gray-100">
+                        {/* Crop / Adjust Button */}
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setCropperModal({
+                              isOpen: true,
+                              imageUrl: image,
+                              targetBlogImageIndex: index,
+                              targetProject: null,
+                            })
+                          }
+                          className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-md transition cursor-pointer"
+                          title="Adjust, crop, zoom, or fit image"
+                        >
+                          <Crop size={14} />
+                          Adjust
+                        </button>
+
+                        <div className="flex items-center gap-1">
+                          {/* Move Left / Up */}
+                          {index > 0 && (
+                            <button
+                              type="button"
+                              onClick={() => moveBlogImage(index, index - 1)}
+                              className="p-1 text-gray-500 hover:text-black hover:bg-gray-100 rounded cursor-pointer transition"
+                              title="Move Left"
+                            >
+                              <ArrowLeft size={14} />
+                            </button>
+                          )}
+
+                          {/* Move Right / Down */}
+                          {index < blogFormData.images.length - 1 && (
+                            <button
+                              type="button"
+                              onClick={() => moveBlogImage(index, index + 1)}
+                              className="p-1 text-gray-500 hover:text-black hover:bg-gray-100 rounded cursor-pointer transition"
+                              title="Move Right"
+                            >
+                              <ArrowRight size={14} />
+                            </button>
+                          )}
+
+                          {/* Remove Image */}
+                          <button
+                            type="button"
+                            onClick={() => removeImage(index)}
+                            className="p-1 text-red-500 hover:text-red-700 hover:bg-red-50 rounded cursor-pointer transition"
+                            title="Delete image"
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -822,21 +902,59 @@ const PortfolioManager: React.FC = () => {
         isOpen={cropperModal.isOpen}
         imageUrl={cropperModal.imageUrl}
         defaultAspectRatio={16 / 9}
-        title="Crop Portfolio Project Thumbnail Image"
+        title={
+          cropperModal.targetBlogImageIndex !== null && cropperModal.targetBlogImageIndex !== undefined
+            ? `Adjust Blog Image #${cropperModal.targetBlogImageIndex + 1}`
+            : "Crop Portfolio Project Thumbnail Image"
+        }
         onClose={() =>
-          setCropperModal({ isOpen: false, imageUrl: "", targetProject: null })
+          setCropperModal({
+            isOpen: false,
+            imageUrl: "",
+            targetProject: null,
+            targetBlogImageIndex: null,
+          })
         }
         onCropSave={async (croppedImageUrl) => {
-          if (cropperModal.targetProject) {
+          if (
+            cropperModal.targetBlogImageIndex !== null &&
+            cropperModal.targetBlogImageIndex !== undefined
+          ) {
+            const idx = cropperModal.targetBlogImageIndex;
+            setBlogFormData((prev) => ({
+              ...prev,
+              images: prev.images.map((img, i) =>
+                i === idx ? croppedImageUrl : img
+              ),
+            }));
+            setCropperModal({
+              isOpen: false,
+              imageUrl: "",
+              targetProject: null,
+              targetBlogImageIndex: null,
+            });
+          } else if (cropperModal.targetProject) {
             // Update existing project directly
             await updateProject(cropperModal.targetProject.id, {
               type: cropperModal.targetProject.type,
               title: cropperModal.targetProject.title,
               image: croppedImageUrl,
             });
+            setCropperModal({
+              isOpen: false,
+              imageUrl: "",
+              targetProject: null,
+              targetBlogImageIndex: null,
+            });
           } else {
             // Update current form data image
             setFormData((prev) => ({ ...prev, image: croppedImageUrl }));
+            setCropperModal({
+              isOpen: false,
+              imageUrl: "",
+              targetProject: null,
+              targetBlogImageIndex: null,
+            });
           }
         }}
       />

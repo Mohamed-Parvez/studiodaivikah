@@ -85,8 +85,8 @@ const FeaturedContent = () => {
       </h1>
 
       {/* Subtitle */}
-      <div className="max-w-[760px] text-center px-5 mb-16">
-        <p className="text-base sm:text-lg text-gray-700 leading-relaxed font-light">
+      <div className="w-full max-w-[1240px] text-center px-5 sm:px-10 mb-16">
+        <p className="text-base sm:text-lg md:text-xl text-gray-700 leading-relaxed font-light max-w-4xl mx-auto">
           Stay updated with the latest press features, media coverage, and
           industry updates from Studio Daivikah. Discover our latest
           architectural milestones and achievements.
@@ -127,7 +127,7 @@ const FeaturedContent = () => {
                 {/* Content */}
                 <div className="p-6 flex flex-col flex-grow justify-between">
                   <div>
-                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-black transition-colors line-clamp-3 leading-snug">
+                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-black transition-colors leading-snug">
                       {item.title}
                     </h3>
                   </div>
