@@ -14,11 +14,31 @@ export async function GET(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   const id = request.nextUrl.pathname.split("/").pop();
-  const { title, image } = await request.json();
+  const { title, image, isHidden } = await request.json();
 
   const updated = await prisma.project2.update({
     where: { id },
-    data: { title, image },
+    data: {
+      title,
+      image,
+      ...(isHidden !== undefined && { isHidden: Boolean(isHidden) }),
+    },
+  });
+
+  return NextResponse.json(updated);
+}
+
+export async function PATCH(request: NextRequest) {
+  const id = request.nextUrl.pathname.split("/").pop();
+  const body = await request.json();
+
+  const updated = await prisma.project2.update({
+    where: { id },
+    data: {
+      ...(body.title !== undefined && { title: body.title }),
+      ...(body.image !== undefined && { image: body.image }),
+      ...(body.isHidden !== undefined && { isHidden: Boolean(body.isHidden) }),
+    },
   });
 
   return NextResponse.json(updated);

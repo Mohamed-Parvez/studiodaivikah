@@ -61,6 +61,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   try {
     const projects = await prisma.project.findMany({
+      where: { isHidden: false },
       select: { id: true, updatedAt: true },
     });
     portfolioRoutes = projects.map((p) => ({
@@ -75,6 +76,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   try {
     const blogs = await prisma.project2.findMany({
+      where: { isHidden: false },
       select: { id: true, updatedAt: true },
     });
     blogRoutes = blogs.map((b) => ({

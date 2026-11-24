@@ -5,7 +5,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Upload, Plus, Edit, Trash2, Save, X, Crop } from "lucide-react";
+import { Upload, Plus, Edit, Trash2, Save, X, Crop, Eye, EyeOff } from "lucide-react";
 import ImageCropperModal from "../ImageCropperModal";
 
 type TeamMember = {
@@ -13,6 +13,7 @@ type TeamMember = {
   image: string;
   name?: string;
   role?: string;
+  isHidden?: boolean;
   createdAt: string;
 };
 
@@ -54,7 +55,7 @@ const AdminTeam: React.FC = () => {
   const fetchTeamMembers = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch("/api/team");
+      const response = await fetch("/api/team?all=true");
       if (!response.ok) {
         console.warn("Error fetching team members:", response.statusText);
         setTeamMembers([]);
@@ -67,6 +68,28 @@ const AdminTeam: React.FC = () => {
       setTeamMembers([]);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const toggleVisibility = async (member: TeamMember) => {
+    const nextHiddenState = !member.isHidden;
+    try {
+      const response = await fetch(`/api/team/${member.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isHidden: nextHiddenState }),
+      });
+
+      if (!response.ok) throw new Error("Failed to update visibility");
+      const updated: TeamMember = await response.json();
+      setTeamMembers((prev) =>
+        prev.map((m) =>
+          m.id === member.id ? { ...m, isHidden: updated.isHidden ?? nextHiddenState } : m
+        )
+      );
+    } catch (error) {
+      console.error("Error updating visibility:", error);
+      alert("Failed to update visibility status.");
     }
   };
 
@@ -438,17 +461,38 @@ const AdminTeam: React.FC = () => {
           teamMembers.map((member) => (
             <div
               key={member.id}
-              className="bg-white rounded-lg shadow-lg overflow-hidden group"
+              className={`bg-white rounded-lg shadow-lg overflow-hidden group transition-all ${
+                member.isHidden ? "border-2 border-amber-400/80 bg-amber-50/20" : ""
+              }`}
             >
               <div className="aspect-square bg-gray-200 relative">
                 <img
                   src={member.image}
                   alt={member.name || "Team member"}
-                  className="w-full h-full object-cover"
+                  className={`w-full h-full object-cover ${member.isHidden ? "opacity-75" : ""}`}
                 />
 
+                {member.isHidden ? (
+                  <span className="absolute top-2 left-2 z-10 bg-amber-600 text-white text-[10px] font-semibold tracking-wide px-2 py-0.5 rounded shadow">
+                    Hidden from Site
+                  </span>
+                ) : (
+                  <span className="absolute top-2 left-2 z-10 bg-emerald-600 text-white text-[10px] font-semibold tracking-wide px-2 py-0.5 rounded shadow">
+                    Visible on Site
+                  </span>
+                )}
+
                 {/* Hover overlay with actions */}
-                <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-2">
+                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-2 z-20">
+                  <button
+                    onClick={() => toggleVisibility(member)}
+                    title={member.isHidden ? "Click to unhide on website" : "Click to hide from website"}
+                    className={`p-2 rounded-full text-white cursor-pointer transition ${
+                      member.isHidden ? "bg-amber-600 hover:bg-amber-700" : "bg-emerald-600 hover:bg-emerald-700"
+                    }`}
+                  >
+                    {member.isHidden ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
                   <button
                     onClick={() =>
                       setCropperModal({
@@ -480,9 +524,20 @@ const AdminTeam: React.FC = () => {
               </div>
 
               <div className="p-3">
-                <h3 className="font-semibold text-gray-900 text-sm">
-                  {member.name || "Unnamed"}
-                </h3>
+                <div className="flex justify-between items-start">
+                  <h3 className="font-semibold text-gray-900 text-sm">
+                    {member.name || "Unnamed"}
+                  </h3>
+                  {member.isHidden ? (
+                    <span className="text-[10px] bg-amber-100 text-amber-800 font-medium px-2 py-0.5 rounded-full">
+                      Hidden
+                    </span>
+                  ) : (
+                    <span className="text-[10px] bg-green-100 text-green-800 font-medium px-2 py-0.5 rounded-full">
+                      Visible
+                    </span>
+                  )}
+                </div>
                 {member.role && (
                   <p className="text-xs text-gray-600 mt-1">{member.role}</p>
                 )}

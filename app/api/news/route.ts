@@ -2,9 +2,13 @@ import prisma from "@/lib/Client";
 import { NextResponse } from "next/server";
 
 // GET all news
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const url = new URL(request.url);
+    const all = url.searchParams.get("all") === "true";
+
     const news = await prisma.news.findMany({
+      where: all ? {} : { isHidden: false },
       orderBy: { createdAt: "desc" },
     });
     return NextResponse.json({ news });
@@ -17,14 +21,19 @@ export async function GET() {
 // POST new news
 export async function POST(request: Request) {
   try {
-    const { src, title, image } = await request.json();
+    const { src, title, image, isHidden } = await request.json();
 
     if (!src || !title || !image) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
     const newNews = await prisma.news.create({
-      data: { src, title, image },
+      data: {
+        src,
+        title,
+        image,
+        isHidden: Boolean(isHidden),
+      },
     });
 
     return NextResponse.json(newNews, { status: 201 });

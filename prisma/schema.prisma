@@ -7,12 +7,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model News {
   id        String   @id @default(cuid())
   src       String
   title     String
   image     String
+  isHidden  Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -23,6 +23,7 @@ model Publication {
   description String
   link        String
   image       String?
+  isHidden    Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -30,6 +31,7 @@ model Publication {
 model Showcase {
   id        String   @id @default(cuid())
   image     String
+  isHidden  Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -39,6 +41,7 @@ model Team {
   image     String
   name      String
   role      String
+  isHidden  Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -48,6 +51,7 @@ model Project {
   type      String
   title     String
   image     String
+  isHidden  Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
@@ -75,6 +79,7 @@ model Project2 {
   id        String   @id @default(cuid())
   title     String
   image     String
+  isHidden  Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   

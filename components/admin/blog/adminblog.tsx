@@ -11,6 +11,7 @@ import {
   X,
   FileText,
   Eye,
+  EyeOff,
   Image as ImageIcon,
   Crop,
 } from "lucide-react";
@@ -20,6 +21,7 @@ type Project = {
   id: string;
   title: string;
   image: string;
+  isHidden?: boolean;
   createdAt: string;
   blog2?: BlogContent;
 };
@@ -87,7 +89,7 @@ const AdminBlog: React.FC = () => {
   const fetchProjects = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch("/api/blog?includeBlog=true");
+      const response = await fetch("/api/blog?includeBlog=true&all=true");
       if (!response.ok) {
         console.warn("Error fetching projects:", response.statusText);
         setProjects([]);
@@ -100,6 +102,28 @@ const AdminBlog: React.FC = () => {
       setProjects([]);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const toggleVisibility = async (project: Project) => {
+    const nextHiddenState = !project.isHidden;
+    try {
+      const response = await fetch(`/api/blog/${project.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isHidden: nextHiddenState }),
+      });
+
+      if (!response.ok) throw new Error("Failed to update visibility");
+      const updated: Project = await response.json();
+      setProjects((prev) =>
+        prev.map((p) =>
+          p.id === project.id ? { ...p, isHidden: updated.isHidden ?? nextHiddenState } : p
+        )
+      );
+    } catch (error) {
+      console.error("Error updating visibility:", error);
+      alert("Failed to update visibility status.");
     }
   };
 
@@ -661,14 +685,25 @@ const AdminBlog: React.FC = () => {
           projects.map((project) => (
             <div
               key={project.id}
-              className="bg-white rounded-lg shadow-lg overflow-hidden"
+              className={`bg-white rounded-lg shadow-lg overflow-hidden transition-all ${
+                project.isHidden ? "border-2 border-amber-400/80 bg-amber-50/20" : ""
+              }`}
             >
-              <div className="aspect-video bg-gray-200">
+              <div className="relative aspect-video bg-gray-200">
                 <img
                   src={project.image}
                   alt={project.title}
-                  className="w-full h-full object-cover"
+                  className={`w-full h-full object-cover ${project.isHidden ? "opacity-75" : ""}`}
                 />
+                {project.isHidden ? (
+                  <span className="absolute top-2 left-2 bg-amber-600 text-white text-[10px] font-semibold tracking-wide px-2 py-0.5 rounded shadow">
+                    Hidden from Site
+                  </span>
+                ) : (
+                  <span className="absolute top-2 left-2 bg-emerald-600 text-white text-[10px] font-semibold tracking-wide px-2 py-0.5 rounded shadow">
+                    Visible on Site
+                  </span>
+                )}
               </div>
               <div className="p-4">
                 <div className="flex justify-between items-start mb-2">
@@ -676,6 +711,17 @@ const AdminBlog: React.FC = () => {
                     {project.type}
                   </span> */}
                   <div className="flex gap-1 items-center">
+                    <button
+                      onClick={() => toggleVisibility(project)}
+                      className={`p-1 rounded cursor-pointer transition ${
+                        project.isHidden
+                          ? "text-amber-600 hover:text-amber-800 hover:bg-amber-100"
+                          : "text-emerald-600 hover:text-emerald-800 hover:bg-emerald-100"
+                      }`}
+                      title={project.isHidden ? "Click to unhide on website" : "Click to hide from website"}
+                    >
+                      {project.isHidden ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
                     <button
                       onClick={() =>
                         setCropperModal({
@@ -728,11 +774,22 @@ const AdminBlog: React.FC = () => {
                   <p className="text-xs text-gray-500">
                     Created: {new Date(project.createdAt).toLocaleDateString()}
                   </p>
-                  {project.blog2 && (
-                    <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
-                      Has Blog
-                    </span>
-                  )}
+                  <div className="flex items-center gap-1.5">
+                    {project.isHidden ? (
+                      <span className="text-[10px] bg-amber-100 text-amber-800 font-medium px-2 py-0.5 rounded-full">
+                        Hidden
+                      </span>
+                    ) : (
+                      <span className="text-[10px] bg-green-100 text-green-800 font-medium px-2 py-0.5 rounded-full">
+                        Visible
+                      </span>
+                    )}
+                    {project.blog2 && (
+                      <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                        Has Blog
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
