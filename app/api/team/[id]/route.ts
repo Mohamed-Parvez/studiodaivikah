@@ -22,7 +22,7 @@ export async function PUT(request: NextRequest) {
   const id = request.nextUrl.pathname.split("/").pop();
   
   try {
-    const { image, name, role, isHidden } = await request.json();
+    const { image, name, role, description, isHidden } = await request.json();
     
     if (!image) {
       return NextResponse.json({ error: "Image is required" }, { status: 400 });
@@ -34,6 +34,7 @@ export async function PUT(request: NextRequest) {
         image,
         name,
         role,
+        description: description !== undefined ? description : null,
         ...(isHidden !== undefined && { isHidden: Boolean(isHidden) }),
       },
     });
@@ -57,6 +58,7 @@ export async function PATCH(request: NextRequest) {
         ...(body.image !== undefined && { image: body.image }),
         ...(body.name !== undefined && { name: body.name }),
         ...(body.role !== undefined && { role: body.role }),
+        ...(body.description !== undefined && { description: body.description }),
         ...(body.isHidden !== undefined && { isHidden: Boolean(body.isHidden) }),
       },
     });
