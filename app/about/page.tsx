@@ -26,14 +26,16 @@ const page = () => {
   return (
     <section className="w-full pt-20 flex-col flex-center">
       <Navbar />
-      <div className="relative w-full flex-center py-28 overflow-hidden">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          className="h-[500px] w-full object-cover absolute opacity-50"
-          src={"/images/abt_main.jpg"}
-          alt="pic1"
+      <div className="relative w-full flex-center py-28 min-h-[380px] sm:min-h-[460px] overflow-hidden">
+        <Image
+          src="/images/abt_main.jpg"
+          alt="Studio Daivikah About Header"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover opacity-50 z-0"
         />
-        <h1 className="text-center z-50 text-black font-extrabold text-[50px] sm:text-[90px] md:text-[120px] lg:text-[140px]">
+        <h1 className="text-center z-10 text-black font-extrabold text-[50px] sm:text-[90px] md:text-[120px] lg:text-[140px]">
           ABOUT
         </h1>
       </div>
@@ -60,7 +62,13 @@ const page = () => {
           </p>
         </div>
         <div className="relative w-full h-[300px] sm:h-[400px] md:w-[400px] md:h-[400px] lg:w-[500px] lg:h-[500px] rounded-lg overflow-hidden flex-shrink-0">
-          <Image alt="pic1" src={"/images/abt_sub.jpg"} fill className="object-cover" />
+          <Image
+            alt="Studio Daivikah Concept"
+            src="/images/abt_sub.jpg"
+            fill
+            sizes="(max-width: 768px) 100vw, 500px"
+            className="object-cover"
+          />
         </div>
       </div>
       <Timeline />

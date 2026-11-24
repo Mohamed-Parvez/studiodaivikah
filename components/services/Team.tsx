@@ -73,6 +73,8 @@ const Team = () => {
             <img
               src={member.image}
               alt={member.name || "Team member"}
+              loading="lazy"
+              decoding="async"
               className="w-full h-80 sm:h-96 object-cover transition-transform duration-500 group-hover:scale-105"
             />
 

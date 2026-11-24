@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 
 export default function Timeline() {
   const timelineData = [
@@ -62,12 +63,13 @@ export default function Timeline() {
                 <div className="bg-white rounded-xl shadow-lg p-4 md:p-8 border border-gray-200">
                   {/* Mobile layout - always same structure */}
                   <div className="block md:hidden">
-                    <div className="mb-4">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
+                    <div className="relative w-full h-48 mb-4 rounded-lg overflow-hidden">
+                      <Image
                         src={item.image}
                         alt={item.title}
-                        className="w-full h-48 object-cover rounded-lg"
+                        fill
+                        sizes="(max-width: 768px) 100vw, 500px"
+                        className="object-cover"
                       />
                     </div>
                     <div className="mb-3">
@@ -102,12 +104,13 @@ export default function Timeline() {
                   <div className="hidden md:block">
                     {isLeft ? (
                       <>
-                        <div className="mb-6">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
+                        <div className="relative w-full max-w-[500px] h-[300px] mb-6 mx-auto rounded-lg overflow-hidden">
+                          <Image
                             src={item.image}
                             alt={item.title}
-                            className="w-[500px] h-[300px] object-cover rounded-lg mx-auto"
+                            fill
+                            sizes="500px"
+                            className="object-cover"
                           />
                         </div>
                         <div className="mb-3">
@@ -175,12 +178,13 @@ export default function Timeline() {
                             {item.type}
                           </span>
                         </div> */}
-                        <div>
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
+                        <div className="relative w-full max-w-[500px] h-[300px] mx-auto rounded-lg overflow-hidden">
+                          <Image
                             src={item.image}
                             alt={item.title}
-                            className="w-[500px] h-[300px] object-cover rounded-lg mx-auto"
+                            fill
+                            sizes="500px"
+                            className="object-cover"
                           />
                         </div>
                       </>

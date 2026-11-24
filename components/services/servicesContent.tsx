@@ -150,12 +150,14 @@ const ServicesContent: React.FC = () => {
   return (
     <section className="w-full pt-20 flex-center flex-col">
       <Navbar />
-      <div className="w-full flex-center border-b border-b-black overflow-hidden">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+      <div className="relative w-full h-[250px] sm:h-[420px] md:h-[500px] border-b border-b-black overflow-hidden">
+        <Image
           src="/images/ser_main.jpg"
           alt="Services Hero"
-          className="w-full h-[250px] sm:h-[500px] object-cover"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
         />
       </div>
 
@@ -189,12 +191,15 @@ const ServicesContent: React.FC = () => {
         {/* First Services Section */}
         <div className="flex items-start sm:items-center justify-between sm:flex-row flex-col max-w-[1000px] w-full py-10 sm:py-16 gap-8 mx-auto">
           <div className="flex flex-col items-start max-w-[500px] w-full">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/images/ser_pic_1.jpg"
-              alt="Studio Daivikah Services"
-              className="h-[220px] sm:h-[260px] w-full object-cover rounded-lg"
-            />
+            <div className="relative h-[220px] sm:h-[260px] w-full rounded-lg overflow-hidden">
+              <Image
+                src="/images/ser_pic_1.jpg"
+                alt="Studio Daivikah Services"
+                fill
+                sizes="(max-width: 768px) 100vw, 500px"
+                className="object-cover"
+              />
+            </div>
             <p className="text-[20px] sm:text-[24px] leading-8 mt-6 font-medium text-black">
               Studio Daivikah: Our practice is rooted in thoughtful design,
               meticulous planning, and an unwavering focus on our clients&apos;
@@ -219,12 +224,15 @@ const ServicesContent: React.FC = () => {
         {/* Second Services Section */}
         <div className="flex items-start sm:items-center justify-between sm:flex-row flex-col max-w-[1000px] w-full py-10 sm:py-16 gap-8 mx-auto">
           <div className="flex flex-col items-start max-w-[500px] w-full">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/images/ser_pic_2.jpg"
-              alt="Additional Services"
-              className="h-[250px] sm:h-[400px] w-full object-cover rounded-lg"
-            />
+            <div className="relative h-[250px] sm:h-[400px] w-full rounded-lg overflow-hidden">
+              <Image
+                src="/images/ser_pic_2.jpg"
+                alt="Additional Services"
+                fill
+                sizes="(max-width: 768px) 100vw, 500px"
+                className="object-cover"
+              />
+            </div>
           </div>
 
           <div className="flex flex-col items-start max-w-[400px] w-full gap-y-4">
@@ -246,12 +254,15 @@ const ServicesContent: React.FC = () => {
           </div>
 
           <div className="flex flex-col items-start max-w-[500px] w-full">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/images/ser_pic_3.jpg"
-              alt="Design Excellence"
-              className="h-[250px] sm:h-[400px] w-full object-cover rounded-lg"
-            />
+            <div className="relative h-[250px] sm:h-[400px] w-full rounded-lg overflow-hidden">
+              <Image
+                src="/images/ser_pic_3.jpg"
+                alt="Design Excellence"
+                fill
+                sizes="(max-width: 768px) 100vw, 500px"
+                className="object-cover"
+              />
+            </div>
           </div>
         </div>
 

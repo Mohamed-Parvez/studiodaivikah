@@ -46,7 +46,9 @@ const Showcase = () => {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={item.image}
-              alt={"img"}
+              alt="Showcase project"
+              loading="lazy"
+              decoding="async"
               className="w-full h-72 md:h-80 object-cover transition-transform duration-300 group-hover:scale-110"
             />
           </div>
