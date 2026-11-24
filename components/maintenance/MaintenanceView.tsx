@@ -3,6 +3,7 @@
 import Image from "next/image";
 import React from "react";
 import { Wrench, Mail, Phone, MapPin, ArrowRight } from "lucide-react";
+import { staticImages } from "@/lib/staticImages";
 
 export default function MaintenanceView() {
   return (
@@ -10,10 +11,13 @@ export default function MaintenanceView() {
       {/* Background image with moody overlay */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/images/herobg.jpg"
+          src={staticImages.herobg.src}
+          placeholder="blur"
+          blurDataURL={staticImages.herobg.blurDataURL}
           alt="Studio Daivikah Architecture Background"
           fill
           priority
+          sizes="100vw"
           className="object-cover object-center opacity-30 scale-105 transition-transform duration-1000"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/80 to-black/95 pointer-events-none" />

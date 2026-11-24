@@ -11,6 +11,7 @@ import Image from "next/image";
 import MainFooter from "@/components/footer/mainfooter";
 import Footer from "@/components/footer/footer";
 import Navbar from "@/components/nav/navbar";
+import { staticImages } from "@/lib/staticImages";
 
 const ContactSchema = z.object({
   name: z
@@ -72,7 +73,9 @@ const ContactContent = () => {
           priority
           sizes="100vw"
           alt="Contact Background"
-          src="/images/contact_img.jpg"
+          src={staticImages.contactImg.src}
+          placeholder="blur"
+          blurDataURL={staticImages.contactImg.blurDataURL}
           className="z-0 object-cover"
         />
         <div className="relative z-10 flex items-center justify-center h-full max-w-[1240px] px-5 sm:px-10 py-12">
@@ -240,7 +243,9 @@ const ContactContent = () => {
             <Image
               fill
               sizes="(max-width: 768px) 100vw, 550px"
-              src="/images/footerbg.jpg"
+              src={staticImages.footerbg.src}
+              placeholder="blur"
+              blurDataURL={staticImages.footerbg.blurDataURL}
               alt="Solutions banner"
               className="object-cover rounded-[16px]"
             />

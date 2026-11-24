@@ -6,6 +6,7 @@ import Navbar from "@/components/nav/navbar";
 import Team from "@/components/services/Team";
 import Image from "next/image";
 import React, { useState } from "react";
+import { staticImages } from "@/lib/staticImages";
 
 type Service = {
   id: string;
@@ -152,7 +153,9 @@ const ServicesContent: React.FC = () => {
       <Navbar />
       <div className="relative w-full h-[250px] sm:h-[420px] md:h-[500px] border-b border-b-black overflow-hidden">
         <Image
-          src="/images/ser_main.jpg"
+          src={staticImages.serMain.src}
+          placeholder="blur"
+          blurDataURL={staticImages.serMain.blurDataURL}
           alt="Services Hero"
           fill
           priority
@@ -193,7 +196,9 @@ const ServicesContent: React.FC = () => {
           <div className="flex flex-col items-start max-w-[500px] w-full">
             <div className="relative h-[220px] sm:h-[260px] w-full rounded-lg overflow-hidden">
               <Image
-                src="/images/ser_pic_1.jpg"
+                src={staticImages.serPic1.src}
+                placeholder="blur"
+                blurDataURL={staticImages.serPic1.blurDataURL}
                 alt="Studio Daivikah Services"
                 fill
                 sizes="(max-width: 768px) 100vw, 500px"
@@ -226,7 +231,9 @@ const ServicesContent: React.FC = () => {
           <div className="flex flex-col items-start max-w-[500px] w-full">
             <div className="relative h-[250px] sm:h-[400px] w-full rounded-lg overflow-hidden">
               <Image
-                src="/images/ser_pic_2.jpg"
+                src={staticImages.serPic2.src}
+                placeholder="blur"
+                blurDataURL={staticImages.serPic2.blurDataURL}
                 alt="Additional Services"
                 fill
                 sizes="(max-width: 768px) 100vw, 500px"
@@ -256,7 +263,9 @@ const ServicesContent: React.FC = () => {
           <div className="flex flex-col items-start max-w-[500px] w-full">
             <div className="relative h-[250px] sm:h-[400px] w-full rounded-lg overflow-hidden">
               <Image
-                src="/images/ser_pic_3.jpg"
+                src={staticImages.serPic3.src}
+                placeholder="blur"
+                blurDataURL={staticImages.serPic3.blurDataURL}
                 alt="Design Excellence"
                 fill
                 sizes="(max-width: 768px) 100vw, 500px"

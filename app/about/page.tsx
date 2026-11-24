@@ -6,6 +6,7 @@ import Image from "next/image";
 import Showcase from "@/components/about/showcase";
 import Navbar from "@/components/nav/navbar";
 import type { Metadata } from "next";
+import { staticImages } from "@/lib/staticImages";
 
 export const metadata: Metadata = {
   title: "About Us | Architecture & Design Philosophy",
@@ -28,7 +29,9 @@ const page = () => {
       <Navbar />
       <div className="relative w-full flex-center py-28 min-h-[380px] sm:min-h-[460px] overflow-hidden">
         <Image
-          src="/images/abt_main.jpg"
+          src={staticImages.abtMain.src}
+          placeholder="blur"
+          blurDataURL={staticImages.abtMain.blurDataURL}
           alt="Studio Daivikah About Header"
           fill
           priority
@@ -64,7 +67,9 @@ const page = () => {
         <div className="relative w-full h-[300px] sm:h-[400px] md:w-[400px] md:h-[400px] lg:w-[500px] lg:h-[500px] rounded-lg overflow-hidden flex-shrink-0">
           <Image
             alt="Studio Daivikah Concept"
-            src="/images/abt_sub.jpg"
+            src={staticImages.abtSub.src}
+            placeholder="blur"
+            blurDataURL={staticImages.abtSub.blurDataURL}
             fill
             sizes="(max-width: 768px) 100vw, 500px"
             className="object-cover"

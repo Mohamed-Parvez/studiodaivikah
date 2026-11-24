@@ -139,6 +139,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="preload" as="image" href="/images/herobg.webp" type="image/webp" fetchPriority="high" />
         <meta property="og:image" content="https://studiodaivikah.com/images/og-share.png" />
         <meta property="og:image:secure_url" content="https://studiodaivikah.com/images/og-share.png" />
         <meta property="og:image:type" content="image/png" />
