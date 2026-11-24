@@ -22,7 +22,7 @@ export async function PUT(request: NextRequest) {
   const id = request.nextUrl.pathname.split("/").pop();
   
   try {
-    const { image, name, role } = await request.json();
+    const { image, name, role, isHidden } = await request.json();
     
     if (!image) {
       return NextResponse.json({ error: "Image is required" }, { status: 400 });
@@ -30,13 +30,41 @@ export async function PUT(request: NextRequest) {
     
     const updatedTeamMember = await prisma.team.update({
       where: { id },
-      data: { image, name, role },
+      data: {
+        image,
+        name,
+        role,
+        ...(isHidden !== undefined && { isHidden: Boolean(isHidden) }),
+      },
     });
     
     return NextResponse.json(updatedTeamMember);
   } catch (error) {
     console.error("PUT error:", error);
     return NextResponse.json({ error: "Failed to update team member" }, { status: 500 });
+  }
+}
+
+export async function PATCH(request: NextRequest) {
+  const id = request.nextUrl.pathname.split("/").pop();
+  
+  try {
+    const body = await request.json();
+    
+    const updatedTeamMember = await prisma.team.update({
+      where: { id },
+      data: {
+        ...(body.image !== undefined && { image: body.image }),
+        ...(body.name !== undefined && { name: body.name }),
+        ...(body.role !== undefined && { role: body.role }),
+        ...(body.isHidden !== undefined && { isHidden: Boolean(body.isHidden) }),
+      },
+    });
+    
+    return NextResponse.json(updatedTeamMember);
+  } catch (error) {
+    console.error("PATCH error:", error);
+    return NextResponse.json({ error: "Failed to patch team member" }, { status: 500 });
   }
 }
 

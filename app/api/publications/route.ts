@@ -2,9 +2,13 @@ import prisma from "@/lib/Client";
 import { NextResponse } from "next/server";
 
 // GET all publications
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const url = new URL(request.url);
+    const all = url.searchParams.get("all") === "true";
+
     const publications = await prisma.publication.findMany({
+      where: all ? {} : { isHidden: false },
       orderBy: { createdAt: "desc" },
     });
     return NextResponse.json({ publications });
@@ -17,7 +21,7 @@ export async function GET() {
 // POST new publication
 export async function POST(request: Request) {
   try {
-    const { title, description, link, image } = await request.json();
+    const { title, description, link, image, isHidden } = await request.json();
 
     if (!title || !description || !link) {
       return NextResponse.json({ error: "Title, description, and link are required fields" }, { status: 400 });
@@ -29,6 +33,7 @@ export async function POST(request: Request) {
         description,
         link,
         image: image || null,
+        isHidden: Boolean(isHidden),
       },
     });
 

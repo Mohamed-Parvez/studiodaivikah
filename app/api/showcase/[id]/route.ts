@@ -22,21 +22,45 @@ export async function PUT(request: NextRequest) {
   const id = request.nextUrl.pathname.split("/").pop();
   
   try {
-    const { image } = await request.json();
-
-    if (!image) {
-      return NextResponse.json({ error: "Image is required" }, { status: 400 });
+    const { image, isHidden } = await request.json();
+    
+    if (!image && isHidden === undefined) {
+      return NextResponse.json({ error: "No fields provided" }, { status: 400 });
     }
-
+    
     const updatedImage = await prisma.showcase.update({
       where: { id },
-      data: { image },
+      data: {
+        ...(image && { image }),
+        ...(isHidden !== undefined && { isHidden: Boolean(isHidden) }),
+      },
     });
-
+    
     return NextResponse.json(updatedImage);
   } catch (error) {
     console.error("PUT error:", error);
     return NextResponse.json({ error: "Failed to update image" }, { status: 500 });
+  }
+}
+
+export async function PATCH(request: NextRequest) {
+  const id = request.nextUrl.pathname.split("/").pop();
+  
+  try {
+    const body = await request.json();
+    
+    const updatedImage = await prisma.showcase.update({
+      where: { id },
+      data: {
+        ...(body.image !== undefined && { image: body.image }),
+        ...(body.isHidden !== undefined && { isHidden: Boolean(body.isHidden) }),
+      },
+    });
+    
+    return NextResponse.json(updatedImage);
+  } catch (error) {
+    console.error("PATCH error:", error);
+    return NextResponse.json({ error: "Failed to patch image" }, { status: 500 });
   }
 }
 

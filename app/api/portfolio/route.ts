@@ -1,4 +1,3 @@
-// /api/portfolio/route.ts - Updated version
 import prisma from "@/lib/Client";
 import { NextResponse } from "next/server";
 
@@ -7,8 +6,10 @@ export async function GET(request: Request) {
   try {
     const url = new URL(request.url);
     const includeBlog = url.searchParams.get('includeBlog') === 'true';
+    const all = url.searchParams.get('all') === 'true';
     
     const projects = await prisma.project.findMany({
+      where: all ? {} : { isHidden: false },
       orderBy: { createdAt: "desc" },
       include: includeBlog ? {
         blog: true
@@ -25,14 +26,19 @@ export async function GET(request: Request) {
 // POST new project
 export async function POST(request: Request) {
   try {
-    const { type, title, image } = await request.json();
+    const { type, title, image, isHidden } = await request.json();
 
     if (!type || !title || !image) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
     const newProject = await prisma.project.create({
-      data: { type, title, image },
+      data: {
+        type,
+        title,
+        image,
+        isHidden: Boolean(isHidden),
+      },
     });
 
     return NextResponse.json(newProject, { status: 201 });

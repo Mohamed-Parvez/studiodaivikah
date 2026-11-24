@@ -4,7 +4,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Upload, Plus, Edit, Trash2, Save, X, ExternalLink, Crop } from "lucide-react";
+import { Upload, Plus, Edit, Trash2, Save, X, ExternalLink, Crop, Eye, EyeOff } from "lucide-react";
 import ImageCropperModal from "../ImageCropperModal";
 
 export type PublicationItem = {
@@ -13,6 +13,7 @@ export type PublicationItem = {
   description: string;
   link: string;
   image?: string | null;
+  isHidden?: boolean;
   createdAt: string;
 };
 
@@ -63,7 +64,7 @@ const AdminPublications: React.FC = () => {
   const fetchPublications = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch("/api/publications");
+      const response = await fetch("/api/publications?all=true");
       if (response.ok) {
         const data = await response.json();
         setPublications(Array.isArray(data?.publications) ? data.publications : []);
@@ -75,6 +76,28 @@ const AdminPublications: React.FC = () => {
       setPublications([]);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const toggleVisibility = async (pub: PublicationItem) => {
+    const nextHiddenState = !pub.isHidden;
+    try {
+      const response = await fetch(`/api/publications/${pub.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isHidden: nextHiddenState }),
+      });
+
+      if (!response.ok) throw new Error("Failed to update visibility");
+      const updated: PublicationItem = await response.json();
+      setPublications((prev) =>
+        prev.map((item) =>
+          item.id === pub.id ? { ...item, isHidden: updated.isHidden ?? nextHiddenState } : item
+        )
+      );
+    } catch (error) {
+      console.error("Error updating visibility:", error);
+      alert("Failed to update visibility status.");
     }
   };
 
@@ -402,6 +425,7 @@ const AdminPublications: React.FC = () => {
                 <tr>
                   <th className="py-3.5 px-4">Image</th>
                   <th className="py-3.5 px-4">Title</th>
+                  <th className="py-3.5 px-4">Status</th>
                   <th className="py-3.5 px-4">Description</th>
                   <th className="py-3.5 px-4">External Link</th>
                   <th className="py-3.5 px-4">Date</th>
@@ -410,13 +434,20 @@ const AdminPublications: React.FC = () => {
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {publications.map((pub) => (
-                  <tr key={pub.id} className="hover:bg-gray-50/70 transition-colors">
+                  <tr
+                    key={pub.id}
+                    className={`hover:bg-gray-50/70 transition-colors ${
+                      pub.isHidden ? "bg-amber-50/20" : ""
+                    }`}
+                  >
                     <td className="py-3 px-4">
                       {pub.image ? (
                         <img
                           src={pub.image}
                           alt={pub.title}
-                          className="w-14 h-10 object-cover rounded-md border border-gray-200"
+                          className={`w-14 h-10 object-cover rounded-md border border-gray-200 ${
+                            pub.isHidden ? "opacity-75" : ""
+                          }`}
                         />
                       ) : (
                         <div className="w-14 h-10 bg-gray-100 rounded-md flex items-center justify-center text-gray-400 text-xs font-medium">
@@ -426,6 +457,17 @@ const AdminPublications: React.FC = () => {
                     </td>
                     <td className="py-3 px-4 font-semibold text-gray-900 max-w-[200px] truncate">
                       {pub.title}
+                    </td>
+                    <td className="py-3 px-4 whitespace-nowrap">
+                      {pub.isHidden ? (
+                        <span className="inline-flex items-center text-[10px] bg-amber-100 text-amber-800 font-medium px-2 py-0.5 rounded-full border border-amber-300">
+                          Hidden
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center text-[10px] bg-green-100 text-green-800 font-medium px-2 py-0.5 rounded-full border border-green-200">
+                          Visible
+                        </span>
+                      )}
                     </td>
                     <td className="py-3 px-4 max-w-[280px] text-xs text-gray-500 line-clamp-2">
                       {pub.description}
@@ -446,6 +488,17 @@ const AdminPublications: React.FC = () => {
                     </td>
                     <td className="py-3 px-4 text-right whitespace-nowrap">
                       <div className="flex items-center justify-end gap-1">
+                        <button
+                          onClick={() => toggleVisibility(pub)}
+                          title={pub.isHidden ? "Click to unhide on website" : "Click to hide from website"}
+                          className={`p-1.5 rounded-lg transition cursor-pointer ${
+                            pub.isHidden
+                              ? "text-amber-600 hover:bg-amber-100"
+                              : "text-emerald-600 hover:bg-emerald-100"
+                          }`}
+                        >
+                          {pub.isHidden ? <EyeOff size={16} /> : <Eye size={16} />}
+                        </button>
                         {pub.image && (
                           <button
                             onClick={() =>

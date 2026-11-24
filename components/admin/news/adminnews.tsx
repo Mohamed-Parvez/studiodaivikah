@@ -5,7 +5,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Upload, Plus, Edit, Trash2, Save, X, Crop } from "lucide-react";
+import { Upload, Plus, Edit, Trash2, Save, X, Crop, Eye, EyeOff } from "lucide-react";
 import ImageCropperModal from "../ImageCropperModal";
 
 type NewsItem = {
@@ -13,6 +13,7 @@ type NewsItem = {
   src: string;
   title: string;
   image: string;
+  isHidden?: boolean;
   createdAt: string;
 };
 
@@ -57,7 +58,7 @@ const AdminNews: React.FC = () => {
   const fetchNews = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch("/api/news");
+      const response = await fetch("/api/news?all=true");
       if (!response.ok) {
         console.warn("Error fetching news:", response.statusText);
         setNews([]);
@@ -70,6 +71,28 @@ const AdminNews: React.FC = () => {
       setNews([]);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const toggleVisibility = async (newsItem: NewsItem) => {
+    const nextHiddenState = !newsItem.isHidden;
+    try {
+      const response = await fetch(`/api/news/${newsItem.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isHidden: nextHiddenState }),
+      });
+
+      if (!response.ok) throw new Error("Failed to update visibility");
+      const updated: NewsItem = await response.json();
+      setNews((prev) =>
+        prev.map((item) =>
+          item.id === newsItem.id ? { ...item, isHidden: updated.isHidden ?? nextHiddenState } : item
+        )
+      );
+    } catch (error) {
+      console.error("Error updating visibility:", error);
+      alert("Failed to update visibility status.");
     }
   };
 
@@ -400,14 +423,25 @@ const AdminNews: React.FC = () => {
           news.map((n) => (
             <div
               key={n.id}
-              className="bg-white rounded-lg shadow-lg overflow-hidden"
+              className={`bg-white rounded-lg shadow-lg overflow-hidden transition-all ${
+                n.isHidden ? "border-2 border-amber-400/80 bg-amber-50/20" : ""
+              }`}
             >
-              <div className="aspect-video bg-gray-200">
+              <div className="relative aspect-video bg-gray-200">
                 <img
                   src={n.image}
                   alt={n.title}
-                  className="w-full h-full object-cover"
+                  className={`w-full h-full object-cover ${n.isHidden ? "opacity-75" : ""}`}
                 />
+                {n.isHidden ? (
+                  <span className="absolute top-2 left-2 bg-amber-600 text-white text-[10px] font-semibold tracking-wide px-2 py-0.5 rounded shadow">
+                    Hidden from Site
+                  </span>
+                ) : (
+                  <span className="absolute top-2 left-2 bg-emerald-600 text-white text-[10px] font-semibold tracking-wide px-2 py-0.5 rounded shadow">
+                    Visible on Site
+                  </span>
+                )}
               </div>
               <div className="p-4">
                 <div className="flex justify-between items-start mb-2">
@@ -415,6 +449,17 @@ const AdminNews: React.FC = () => {
                     {n.src}
                   </span>
                   <div className="flex gap-1.5 items-center">
+                    <button
+                      onClick={() => toggleVisibility(n)}
+                      className={`p-1 rounded cursor-pointer transition ${
+                        n.isHidden
+                          ? "text-amber-600 hover:text-amber-800 hover:bg-amber-100"
+                          : "text-emerald-600 hover:text-emerald-800 hover:bg-emerald-100"
+                      }`}
+                      title={n.isHidden ? "Click to unhide on website" : "Click to hide from website"}
+                    >
+                      {n.isHidden ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
                     <button
                       onClick={() =>
                         setCropperModal({
@@ -445,9 +490,20 @@ const AdminNews: React.FC = () => {
                   </div>
                 </div>
                 <h3 className="font-semibold text-gray-900 mb-2">{n.title}</h3>
-                <p className="text-xs text-gray-500">
-                  Created: {new Date(n.createdAt).toLocaleDateString()}
-                </p>
+                <div className="flex justify-between items-center">
+                  <p className="text-xs text-gray-500">
+                    Created: {new Date(n.createdAt).toLocaleDateString()}
+                  </p>
+                  {n.isHidden ? (
+                    <span className="text-[10px] bg-amber-100 text-amber-800 font-medium px-2 py-0.5 rounded-full">
+                      Hidden
+                    </span>
+                  ) : (
+                    <span className="text-[10px] bg-green-100 text-green-800 font-medium px-2 py-0.5 rounded-full">
+                      Visible
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
           ))

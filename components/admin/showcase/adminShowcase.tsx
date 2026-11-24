@@ -5,11 +5,12 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Upload, Plus, Edit, Trash2, Save, X } from "lucide-react";
+import { Upload, Plus, Edit, Trash2, Save, X, Eye, EyeOff } from "lucide-react";
 
 type GalleryImage = {
   id: string;
   image: string;
+  isHidden?: boolean;
   createdAt: string;
 };
 
@@ -39,7 +40,7 @@ const AdminShowcase: React.FC = () => {
   const fetchImages = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch("/api/showcase");
+      const response = await fetch("/api/showcase?all=true");
       if (!response.ok) {
         console.warn("Error fetching images:", response.statusText);
         setImages([]);
@@ -52,6 +53,28 @@ const AdminShowcase: React.FC = () => {
       setImages([]);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const toggleVisibility = async (image: GalleryImage) => {
+    const nextHiddenState = !image.isHidden;
+    try {
+      const response = await fetch(`/api/showcase/${image.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isHidden: nextHiddenState }),
+      });
+
+      if (!response.ok) throw new Error("Failed to update visibility");
+      const updated: GalleryImage = await response.json();
+      setImages((prev) =>
+        prev.map((img) =>
+          img.id === image.id ? { ...img, isHidden: updated.isHidden ?? nextHiddenState } : img
+        )
+      );
+    } catch (error) {
+      console.error("Error updating visibility:", error);
+      alert("Failed to update visibility status.");
     }
   };
 
@@ -342,25 +365,48 @@ const AdminShowcase: React.FC = () => {
           images.map((image) => (
             <div
               key={image.id}
-              className="bg-white rounded-lg shadow-lg overflow-hidden group"
+              className={`bg-white rounded-lg shadow-lg overflow-hidden group transition-all ${
+                image.isHidden ? "border-2 border-amber-400/80 bg-amber-50/20" : ""
+              }`}
             >
               <div className="aspect-square bg-gray-200 relative">
                 <img
                   src={image.image}
                   alt="Gallery image"
-                  className="w-full h-full object-cover"
+                  className={`w-full h-full object-cover ${image.isHidden ? "opacity-75" : ""}`}
                 />
 
+                {image.isHidden ? (
+                  <span className="absolute top-2 left-2 z-10 bg-amber-600 text-white text-[10px] font-semibold tracking-wide px-2 py-0.5 rounded shadow">
+                    Hidden from Site
+                  </span>
+                ) : (
+                  <span className="absolute top-2 left-2 z-10 bg-emerald-600 text-white text-[10px] font-semibold tracking-wide px-2 py-0.5 rounded shadow">
+                    Visible on Site
+                  </span>
+                )}
+
                 {/* Hover overlay with actions */}
-                <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-2">
+                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-2 z-20">
+                  <button
+                    onClick={() => toggleVisibility(image)}
+                    title={image.isHidden ? "Click to unhide on website" : "Click to hide from website"}
+                    className={`p-2 rounded-full text-white cursor-pointer transition ${
+                      image.isHidden ? "bg-amber-600 hover:bg-amber-700" : "bg-emerald-600 hover:bg-emerald-700"
+                    }`}
+                  >
+                    {image.isHidden ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
                   <button
                     onClick={() => startEdit(image)}
+                    title="Edit Image"
                     className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 cursor-pointer"
                   >
                     <Edit size={16} />
                   </button>
                   <button
                     onClick={() => showDeleteConfirmation(image)}
+                    title="Delete Image"
                     className="bg-red-600 text-white p-2 rounded-full hover:bg-red-700 cursor-pointer"
                   >
                     <Trash2 size={16} />
@@ -368,10 +414,19 @@ const AdminShowcase: React.FC = () => {
                 </div>
               </div>
 
-              <div className="p-3">
+              <div className="p-3 flex justify-between items-center">
                 <p className="text-xs text-gray-500">
                   Added: {new Date(image.createdAt).toLocaleDateString()}
                 </p>
+                {image.isHidden ? (
+                  <span className="text-[10px] bg-amber-100 text-amber-800 font-medium px-2 py-0.5 rounded-full">
+                    Hidden
+                  </span>
+                ) : (
+                  <span className="text-[10px] bg-green-100 text-green-800 font-medium px-2 py-0.5 rounded-full">
+                    Visible
+                  </span>
+                )}
               </div>
             </div>
           ))

@@ -28,7 +28,7 @@ export async function PUT(request: NextRequest) {
   }
 
   try {
-    const { title, description, link, image } = await request.json();
+    const { title, description, link, image, isHidden } = await request.json();
 
     const updated = await prisma.publication.update({
       where: { id },
@@ -37,6 +37,7 @@ export async function PUT(request: NextRequest) {
         description,
         link,
         image: image !== undefined ? image : null,
+        ...(isHidden !== undefined && { isHidden: Boolean(isHidden) }),
       },
     });
 
@@ -44,6 +45,33 @@ export async function PUT(request: NextRequest) {
   } catch (error) {
     console.error("PUT publication error:", error);
     return NextResponse.json({ error: "Failed to update publication" }, { status: 500 });
+  }
+}
+
+export async function PATCH(request: NextRequest) {
+  const id = request.nextUrl.pathname.split("/").pop();
+  if (!id) {
+    return NextResponse.json({ error: "ID parameter missing" }, { status: 400 });
+  }
+
+  try {
+    const body = await request.json();
+
+    const updated = await prisma.publication.update({
+      where: { id },
+      data: {
+        ...(body.title !== undefined && { title: body.title }),
+        ...(body.description !== undefined && { description: body.description }),
+        ...(body.link !== undefined && { link: body.link }),
+        ...(body.image !== undefined && { image: body.image }),
+        ...(body.isHidden !== undefined && { isHidden: Boolean(body.isHidden) }),
+      },
+    });
+
+    return NextResponse.json(updated);
+  } catch (error) {
+    console.error("PATCH publication error:", error);
+    return NextResponse.json({ error: "Failed to patch publication" }, { status: 500 });
   }
 }
 

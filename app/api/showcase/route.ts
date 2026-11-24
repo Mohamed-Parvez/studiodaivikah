@@ -2,9 +2,13 @@ import prisma from "@/lib/Client";
 import { NextResponse } from "next/server";
 
 // GET all gallery images
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const url = new URL(request.url);
+    const all = url.searchParams.get("all") === "true";
+
     const images = await prisma.showcase.findMany({
+      where: all ? {} : { isHidden: false },
       orderBy: { createdAt: "desc" },
     });
     return NextResponse.json({ images });
@@ -17,14 +21,17 @@ export async function GET() {
 // POST new gallery image
 export async function POST(request: Request) {
   try {
-    const { image } = await request.json();
+    const { image, isHidden } = await request.json();
 
     if (!image) {
       return NextResponse.json({ error: "Image is required" }, { status: 400 });
     }
 
     const newImage = await prisma.showcase.create({
-      data: { image },
+      data: {
+        image,
+        isHidden: Boolean(isHidden),
+      },
     });
 
     return NextResponse.json(newImage, { status: 201 });

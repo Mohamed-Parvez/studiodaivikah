@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Upload, Plus, Edit, Trash2, Save, X, FileText, Eye, Image as ImageIcon, Crop } from "lucide-react";
+import { Upload, Plus, Edit, Trash2, Save, X, FileText, Eye, EyeOff, Image as ImageIcon, Crop } from "lucide-react";
 import ImageCropperModal from "../ImageCropperModal";
 
 type Project = {
@@ -10,6 +10,7 @@ type Project = {
   type: string;
   title: string;
   image: string;
+  isHidden?: boolean;
   createdAt: string;
   blog?: BlogContent;
 };
@@ -89,7 +90,7 @@ const PortfolioManager: React.FC = () => {
   const fetchProjects = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch("/api/portfolio?includeBlog=true");
+      const response = await fetch("/api/portfolio?includeBlog=true&all=true");
       if (!response.ok) {
         console.warn("Error fetching projects:", response.statusText);
         setProjects([]);
@@ -102,6 +103,28 @@ const PortfolioManager: React.FC = () => {
       setProjects([]);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const toggleVisibility = async (project: Project) => {
+    const nextHiddenState = !project.isHidden;
+    try {
+      const response = await fetch(`/api/portfolio/${project.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isHidden: nextHiddenState }),
+      });
+
+      if (!response.ok) throw new Error("Failed to update visibility");
+      const updated: Project = await response.json();
+      setProjects((prev) =>
+        prev.map((p) =>
+          p.id === project.id ? { ...p, isHidden: updated.isHidden ?? nextHiddenState } : p
+        )
+      );
+    } catch (error) {
+      console.error("Error updating visibility:", error);
+      alert("Failed to update visibility status.");
     }
   };
 
@@ -684,14 +707,25 @@ const PortfolioManager: React.FC = () => {
           projects.map((project) => (
             <div
               key={project.id}
-              className="bg-white rounded-lg shadow-lg overflow-hidden"
+              className={`bg-white rounded-lg shadow-lg overflow-hidden transition-all ${
+                project.isHidden ? "border-2 border-amber-400/80 bg-amber-50/20" : ""
+              }`}
             >
-              <div className="aspect-video bg-gray-200">
+              <div className="relative aspect-video bg-gray-200">
                 <img
                   src={project.image}
                   alt={project.title}
-                  className="w-full h-full object-cover"
+                  className={`w-full h-full object-cover ${project.isHidden ? "opacity-75" : ""}`}
                 />
+                {project.isHidden ? (
+                  <span className="absolute top-2 left-2 bg-amber-600 text-white text-[10px] font-semibold tracking-wide px-2 py-0.5 rounded shadow">
+                    Hidden from Site
+                  </span>
+                ) : (
+                  <span className="absolute top-2 left-2 bg-emerald-600 text-white text-[10px] font-semibold tracking-wide px-2 py-0.5 rounded shadow">
+                    Visible on Site
+                  </span>
+                )}
               </div>
               <div className="p-4">
                 <div className="flex justify-between items-start mb-2">
@@ -699,6 +733,17 @@ const PortfolioManager: React.FC = () => {
                     {project.type}
                   </span>
                   <div className="flex gap-1 items-center">
+                    <button
+                      onClick={() => toggleVisibility(project)}
+                      className={`p-1 rounded cursor-pointer transition ${
+                        project.isHidden
+                          ? "text-amber-600 hover:text-amber-800 hover:bg-amber-100"
+                          : "text-emerald-600 hover:text-emerald-800 hover:bg-emerald-100"
+                      }`}
+                      title={project.isHidden ? "Click to unhide on website" : "Click to hide from website"}
+                    >
+                      {project.isHidden ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
                     <button
                       onClick={() =>
                         setCropperModal({
@@ -721,21 +766,21 @@ const PortfolioManager: React.FC = () => {
                     </button>
                     <button
                       onClick={() => startBlogEdit(project)}
-                      className="text-green-600 cursor-pointer hover:text-green-800"
+                      className="text-green-600 cursor-pointer hover:text-green-800 p-1 hover:bg-green-50 rounded"
                       title="Edit Blog Content"
                     >
                       <FileText size={16} />
                     </button>
                     <button
                       onClick={() => window.open(`/portfolio/${project.id}`, '_blank')}
-                      className="text-purple-600 cursor-pointer hover:text-purple-800"
+                      className="text-purple-600 cursor-pointer hover:text-purple-800 p-1 hover:bg-purple-50 rounded"
                       title="Preview Project"
                     >
                       <Eye size={16} />
                     </button>
                     <button
                       onClick={() => showDeleteConfirmation(project)}
-                      className="text-red-600 cursor-pointer hover:text-red-800"
+                      className="text-red-600 cursor-pointer hover:text-red-800 p-1 hover:bg-red-50 rounded"
                       title="Delete Project"
                     >
                       <Trash2 size={16} />
@@ -749,11 +794,22 @@ const PortfolioManager: React.FC = () => {
                   <p className="text-xs text-gray-500">
                     Created: {new Date(project.createdAt).toLocaleDateString()}
                   </p>
-                  {project.blog && (
-                    <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
-                      Has Blog
-                    </span>
-                  )}
+                  <div className="flex items-center gap-1.5">
+                    {project.isHidden ? (
+                      <span className="text-[10px] bg-amber-100 text-amber-800 font-medium px-2 py-0.5 rounded-full">
+                        Hidden
+                      </span>
+                    ) : (
+                      <span className="text-[10px] bg-green-100 text-green-800 font-medium px-2 py-0.5 rounded-full">
+                        Visible
+                      </span>
+                    )}
+                    {project.blog && (
+                      <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                        Has Blog
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
