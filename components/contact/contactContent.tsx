@@ -69,6 +69,8 @@ const ContactContent = () => {
       <div className="w-full min-h-[450px] sm:h-[550px] relative overflow-hidden flex items-center justify-center">
         <Image
           fill
+          priority
+          sizes="100vw"
           alt="Contact Background"
           src="/images/contact_img.jpg"
           className="z-0 object-cover"
@@ -237,6 +239,7 @@ const ContactContent = () => {
           <div className="relative w-full md:w-1/2 h-[220px] sm:h-[280px] rounded-[16px] overflow-hidden flex-shrink-0">
             <Image
               fill
+              sizes="(max-width: 768px) 100vw, 550px"
               src="/images/footerbg.jpg"
               alt="Solutions banner"
               className="object-cover rounded-[16px]"

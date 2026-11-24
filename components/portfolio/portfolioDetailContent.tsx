@@ -102,11 +102,11 @@ const PortfolioDetailContent = () => {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen w-full max-w-[1140px] px-5 sm:px-8 xl:px-0 flex flex-col justify-between bg-white overflow-x-hidden">
+      <div className="min-h-screen w-full max-w-[1240px] px-5 sm:px-8 xl:px-0 flex flex-col justify-between bg-white overflow-x-hidden">
         {/* Hero Section */}
         <div className="pt-20">
           {/* Back Button */}
-          <div className="max-w-7xl mx-auto py-6">
+          <div className="w-full py-6">
             <button
               onClick={() => router.back()}
               className="flex cursor-pointer items-center gap-2 text-gray-600 hover:text-black transition-colors mb-6"
@@ -117,8 +117,8 @@ const PortfolioDetailContent = () => {
           </div>
 
           {/* Project Header */}
-          <div className="w-full flex justify-center items-center px-5 sm:px-8 xl:px-0">
-            <h1 className="text-[30px] md:text-[50px] lg:text-[60px] font-bold text-center break-words max-w-full">
+          <div className="w-full py-6">
+            <h1 className="text-[32px] sm:text-[45px] md:text-[54px] lg:text-[64px] font-bold text-left break-words w-full text-black">
               {project.title && project.title.toUpperCase()}
             </h1>
           </div>
@@ -126,11 +126,11 @@ const PortfolioDetailContent = () => {
 
         {/* Blog Content */}
         {blog && blog.paragraphs && blog.paragraphs.length > 0 && (
-          <div className="w-full max-w-6xl mx-auto py-12">
-            <div className="prose prose-lg max-w-none">
+          <div className="w-full py-6">
+            <div className="w-full">
               {blog.paragraphs.map((paragraph, index) => (
                 <div key={index} className="mb-8 w-full">
-                  <p className="text-gray-700 text-sm sm:text-lg leading-relaxed mb-6 break-words">
+                  <p className="text-gray-700 text-base sm:text-lg md:text-xl leading-relaxed mb-6 break-words">
                     {paragraph}
                   </p>
                 </div>
@@ -139,7 +139,7 @@ const PortfolioDetailContent = () => {
 
             {/* Remaining Images Gallery */}
             {blog.images && blog.images.length > 0 && (
-              <div className="mt-16 w-full">
+              <div className="mt-12 mb-16 w-full">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
                   {blog.images.map((image, index) => (
                     <div key={index} className="group cursor-pointer w-full">

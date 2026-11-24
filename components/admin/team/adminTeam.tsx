@@ -13,6 +13,7 @@ type TeamMember = {
   image: string;
   name?: string;
   role?: string;
+  description?: string | null;
   isHidden?: boolean;
   createdAt: string;
 };
@@ -32,6 +33,7 @@ const AdminTeam: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [role, setRole] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
 
   const [cropperModal, setCropperModal] = useState<{
     isOpen: boolean;
@@ -101,7 +103,8 @@ const AdminTeam: React.FC = () => {
   const createTeamMember = async (
     imageUrl: string,
     name: string,
-    role: string
+    role: string,
+    description: string
   ): Promise<TeamMember> => {
     try {
       const response = await fetch("/api/team", {
@@ -109,7 +112,7 @@ const AdminTeam: React.FC = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ image: imageUrl, name, role }),
+        body: JSON.stringify({ image: imageUrl, name, role, description }),
       });
 
       if (!response.ok) throw new Error("Failed to create team member");
@@ -127,7 +130,8 @@ const AdminTeam: React.FC = () => {
     id: string,
     imageUrl: string,
     name: string,
-    role: string
+    role: string,
+    description: string
   ): Promise<TeamMember> => {
     try {
       const response = await fetch(`/api/team/${id}`, {
@@ -135,7 +139,7 @@ const AdminTeam: React.FC = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ image: imageUrl, name, role }),
+        body: JSON.stringify({ image: imageUrl, name, role, description }),
       });
 
       if (!response.ok) throw new Error("Failed to update team member");
@@ -202,11 +206,12 @@ const AdminTeam: React.FC = () => {
           editingMember.id,
           selectedImage,
           name.trim(),
-          role.trim()
+          role.trim(),
+          description.trim()
         );
         setEditingMember(null);
       } else {
-        await createTeamMember(selectedImage, name.trim(), role.trim());
+        await createTeamMember(selectedImage, name.trim(), role.trim(), description.trim());
         setShowAddForm(false);
       }
 
@@ -214,6 +219,7 @@ const AdminTeam: React.FC = () => {
       setSelectedImage("");
       setName("");
       setRole("");
+      setDescription("");
     } catch (error) {
       alert("Error saving team member.");
     } finally {
@@ -227,6 +233,7 @@ const AdminTeam: React.FC = () => {
     setSelectedImage(member.image);
     setName(member.name || "");
     setRole(member.role || "");
+    setDescription(member.description || "");
   };
 
   // Cancel editing
@@ -236,6 +243,7 @@ const AdminTeam: React.FC = () => {
     setSelectedImage("");
     setName("");
     setRole("");
+    setDescription("");
   };
 
   // Define a minimal Cloudinary type for TypeScript
@@ -366,6 +374,20 @@ const AdminTeam: React.FC = () => {
                 onChange={(e) => setRole(e.target.value)}
                 placeholder="Enter role/position (optional)"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            {/* Description / Bio Field */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Description / Bio
+              </label>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Enter team member bio, background, architectural experience or role details..."
+                rows={4}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               />
             </div>
 
@@ -528,18 +550,30 @@ const AdminTeam: React.FC = () => {
                   <h3 className="font-semibold text-gray-900 text-sm">
                     {member.name || "Unnamed"}
                   </h3>
-                  {member.isHidden ? (
-                    <span className="text-[10px] bg-amber-100 text-amber-800 font-medium px-2 py-0.5 rounded-full">
-                      Hidden
-                    </span>
-                  ) : (
-                    <span className="text-[10px] bg-green-100 text-green-800 font-medium px-2 py-0.5 rounded-full">
-                      Visible
-                    </span>
-                  )}
+                  <div className="flex items-center gap-1">
+                    {member.description && (
+                      <span className="text-[10px] bg-blue-50 text-blue-700 font-medium px-2 py-0.5 rounded-full border border-blue-200">
+                        Has Bio
+                      </span>
+                    )}
+                    {member.isHidden ? (
+                      <span className="text-[10px] bg-amber-100 text-amber-800 font-medium px-2 py-0.5 rounded-full">
+                        Hidden
+                      </span>
+                    ) : (
+                      <span className="text-[10px] bg-green-100 text-green-800 font-medium px-2 py-0.5 rounded-full">
+                        Visible
+                      </span>
+                    )}
+                  </div>
                 </div>
                 {member.role && (
                   <p className="text-xs text-gray-600 mt-1">{member.role}</p>
+                )}
+                {member.description && (
+                  <p className="text-xs text-gray-500 mt-1.5 line-clamp-2 italic">
+                    &quot;{member.description}&quot;
+                  </p>
                 )}
                 <p className="text-xs text-gray-500 mt-2">
                   Added: {new Date(member.createdAt).toLocaleDateString()}
@@ -565,8 +599,9 @@ const AdminTeam: React.FC = () => {
             await updateTeamMember(
               cropperModal.targetMember.id,
               croppedImageUrl,
-              cropperModal.targetMember.name,
-              cropperModal.targetMember.role
+              cropperModal.targetMember.name || "",
+              cropperModal.targetMember.role || "",
+              cropperModal.targetMember.description || ""
             );
           } else {
             // Update current form image

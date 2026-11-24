@@ -108,11 +108,11 @@ const BlogDetailContent = () => {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen w-full max-w-[1140px] flex-col justify-between flex bg-white overflow-x-hidden">
+      <div className="min-h-screen w-full max-w-[1240px] px-5 sm:px-8 xl:px-0 flex-col justify-between flex bg-white overflow-x-hidden">
         {/* Hero Section */}
         <div className="pt-20">
           {/* Back Button */}
-          <div className="max-w-7xl mx-auto px-5 sm:px-8 xl:px-0 py-6">
+          <div className="w-full py-6">
             <button
               onClick={() => router.back()}
               className="flex cursor-pointer items-center gap-2 text-gray-600 hover:text-black transition-colors mb-6"
@@ -122,52 +122,46 @@ const BlogDetailContent = () => {
             </button>
           </div>
 
-          {/* Project Header with Left Column Layout */}
-          <div className="w-full max-w-7xl mx-auto px-5 sm:px-8 xl:px-0 py-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-              {/* Left Column - Title, Subtitle, and First Image */}
-              <div className="space-y-6">
-                {/* Project Title */}
-                <h1 className="text-[30px] md:text-[40px] lg:text-[50px] font-bold break-words leading-tight">
-                  {project.title && project.title.toUpperCase()}
-                </h1>
+          {/* Project Header - Full Width */}
+          <div className="w-full py-6">
+            <div className="w-full space-y-8">
+              {/* Project Title */}
+              <h1 className="text-[32px] sm:text-[45px] md:text-[54px] lg:text-[64px] font-bold break-words leading-tight w-full text-black">
+                {project.title && project.title.toUpperCase()}
+              </h1>
 
-                {/* Subtitle (First Paragraph) */}
-                {subtitle && (
-                  <div className="text-gray-600 text-lg md:text-xl leading-relaxed font-medium">
-                    {subtitle.split("\n").map((line, index) => (
-                      <p key={index} className="mb-2">
-                        {line}
-                      </p>
-                    ))}
-                  </div>
-                )}
+              {/* Subtitle (First Paragraph) */}
+              {subtitle && (
+                <div className="text-gray-700 text-base sm:text-lg md:text-xl leading-relaxed font-normal w-full">
+                  {subtitle.split("\n").map((line, index) => (
+                    <p key={index} className="mb-4">
+                      {line}
+                    </p>
+                  ))}
+                </div>
+              )}
 
-                {/* First Image */}
-                {firstImage && (
-                  <div className="max-w-[400px] w-full">
-                    <img
-                      src={firstImage}
-                      alt="Project hero image"
-                      className="w-full h-auto rounded-lg shadow-lg object-cover max-h-96"
-                    />
-                  </div>
-                )}
-              </div>
-
-              {/* Right Column */}
-              <div className="hidden lg:block"></div>
+              {/* First Image (Hero Image if present) */}
+              {firstImage && (
+                <div className="w-full my-8 flex justify-center bg-gray-50/50 rounded-2xl border border-gray-100 overflow-hidden p-1 sm:p-2">
+                  <img
+                    src={firstImage}
+                    alt={project.title}
+                    className="w-full h-auto max-h-[700px] rounded-xl shadow-sm object-contain"
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>
 
         {/* Blog Content - Remaining Paragraphs */}
         {remainingParagraphs.length > 0 && (
-          <div className="w-full max-w-6xl mx-auto px-5 sm:px-8 xl:px-0 py-12">
-            <div className="prose prose-lg max-w-none">
+          <div className="w-full py-6">
+            <div className="w-full">
               {remainingParagraphs.map((paragraph, index) => (
                 <div key={index + 1} className="mb-8 w-full">
-                  <p className="text-gray-700 text-sm sm:text-lg leading-relaxed mb-6 break-words">
+                  <p className="text-gray-700 text-base sm:text-lg md:text-xl leading-relaxed mb-6 break-words">
                     {paragraph}
                   </p>
                 </div>
@@ -178,7 +172,7 @@ const BlogDetailContent = () => {
 
         {/* Remaining Images Gallery */}
         {remainingImages.length > 0 && (
-          <div className="w-full max-w-6xl mx-auto px-5 sm:px-8 xl:px-0 mt-8 mb-16">
+          <div className="w-full mt-8 mb-16">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
               {remainingImages.map((image, index) => (
                 <div key={index + 1} className="group cursor-pointer w-full">

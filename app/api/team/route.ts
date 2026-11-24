@@ -24,7 +24,7 @@ export async function GET(request: Request) {
 // POST new team member
 export async function POST(request: Request) {
   try {
-    const { image, name, role, isHidden } = await request.json();
+    const { image, name, role, description, isHidden } = await request.json();
 
     if (!image) {
       return NextResponse.json({ error: "Image is required" }, { status: 400 });
@@ -35,6 +35,7 @@ export async function POST(request: Request) {
         image,
         name: name || "",
         role: role || "",
+        description: description || null,
         isHidden: Boolean(isHidden),
       },
     });

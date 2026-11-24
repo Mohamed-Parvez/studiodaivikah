@@ -86,8 +86,8 @@ const PublicationsContent = () => {
       </h1>
 
       {/* Subtitle */}
-      <div className="max-w-[760px] text-center px-5 mb-16">
-        <p className="text-base sm:text-lg text-gray-700 leading-relaxed font-light">
+      <div className="w-full max-w-[1240px] text-center px-5 sm:px-10 mb-16">
+        <p className="text-base sm:text-lg md:text-xl text-gray-700 leading-relaxed font-light max-w-4xl mx-auto">
           Explore external publication features, articles, press mentions, and published works highlighting Studio Daivikah.
         </p>
       </div>
@@ -126,10 +126,10 @@ const PublicationsContent = () => {
 
                 <div className="p-7 flex flex-col flex-grow justify-between">
                   <div>
-                    <h3 className="text-xl font-bold text-gray-900 group-hover:text-black transition-colors line-clamp-2 leading-snug mb-3">
+                    <h3 className="text-xl font-bold text-gray-900 group-hover:text-black transition-colors leading-snug mb-3">
                       {pub.title}
                     </h3>
-                    <p className="text-sm text-gray-600 line-clamp-3 leading-relaxed font-normal">
+                    <p className="text-sm text-gray-600 leading-relaxed font-normal">
                       {pub.description}
                     </p>
                   </div>
