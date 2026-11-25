@@ -99,11 +99,7 @@ const BlogContent = () => {
                   </h3>
                   <div className="flex items-center gap-2 mt-2">
                     <span className="text-xs text-gray-500">
-                      {new Date(item.createdAt).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })}
+                      {new Date(item.createdAt).getFullYear()}
                     </span>
                   </div>
                 </div>

@@ -146,10 +146,7 @@ const PortfolioContent = () => {
                   </div>
                   <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
                     <span className="text-xs text-gray-400 font-medium">
-                      {new Date(project.createdAt).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "short",
-                      })}
+                      {new Date(project.createdAt).getFullYear()}
                     </span>
                     <span className="text-xs font-semibold text-black group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
                       View Project &rarr;

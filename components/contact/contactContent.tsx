@@ -98,7 +98,7 @@ const ContactContent = () => {
                 LET&apos;S TALK
               </h1>
               <p className="text-[18px] sm:text-[22px] text-gray-700 leading-relaxed">
-                &quot;From first sketch to final handover, we&apos;re here for you.&quot;
+                From first sketch to final handover, we&apos;re here for you.
                 <span className="block mt-1 text-gray-800 font-medium">
                   Contact Studio Daivikah!
                 </span>

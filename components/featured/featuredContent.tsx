@@ -134,11 +134,7 @@ const FeaturedContent = () => {
 
                   <div className="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between">
                     <span className="text-xs text-gray-400 font-medium">
-                      {new Date(item.createdAt).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })}
+                      {new Date(item.createdAt).getFullYear()}
                     </span>
 
                     <button
