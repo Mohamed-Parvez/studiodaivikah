@@ -69,22 +69,41 @@ export async function POST(req: Request) {
     const adminEmail = process.env.EMAIL || "studiodavikah@gmail.com";
     const appPassword = process.env.APP_PASS ? process.env.APP_PASS.replace(/\s+/g, "") : "";
 
-    // Determine full resume URL for clickable link
+    // Determine full resume URL and attachments
+    const isDataUrl = resumeUrl ? resumeUrl.startsWith("data:") : false;
     const host = req.headers.get("host") || "studiodaivikah.com";
     const protocol = req.headers.get("x-forwarded-proto") || (host.includes("localhost") ? "http" : "https");
-    const fullResumeUrl = resumeUrl
+    const fullResumeUrl = resumeUrl && !isDataUrl
       ? resumeUrl.startsWith("http")
         ? resumeUrl
         : `${protocol}://${host}${resumeUrl}`
       : null;
 
-    // Attach local resume if uploaded
+    // Attach resume file if available
     const emailAttachments: any[] = [];
-    if (resumeUrl && resumeUrl.startsWith("/uploads/resumes/")) {
-      const localFilePath = path.join(process.cwd(), "public", resumeUrl);
-      emailAttachments.push({
-        path: localFilePath,
-      });
+    if (resumeUrl) {
+      try {
+        const safeCandidateName = name.replace(/[^a-zA-Z0-9_-]/g, "_");
+        if (isDataUrl) {
+          emailAttachments.push({
+            filename: `${safeCandidateName}_Resume.pdf`,
+            path: resumeUrl,
+          });
+        } else if (resumeUrl.startsWith("/uploads/resumes/")) {
+          const localFilePath = path.join(process.cwd(), "public", resumeUrl);
+          emailAttachments.push({
+            filename: `${safeCandidateName}_Resume.pdf`,
+            path: localFilePath,
+          });
+        } else if (resumeUrl.startsWith("http")) {
+          emailAttachments.push({
+            filename: `${safeCandidateName}_Resume.pdf`,
+            path: resumeUrl,
+          });
+        }
+      } catch (attErr) {
+        console.error("Failed to prepare resume email attachment:", attErr);
+      }
     }
 
     // Email to Admin notifying of new applicant
@@ -140,9 +159,16 @@ export async function POST(req: Request) {
                 ${
                   fullResumeUrl
                     ? `<div class="row">
-                        <div class="label">Resume / CV ${emailAttachments.length > 0 ? "(Also attached to this email)" : "Link"}</div>
+                        <div class="label">Resume / CV ${emailAttachments.length > 0 ? "(Attached to this email)" : "Link"}</div>
                         <div class="value">
                           <a href="${fullResumeUrl}" target="_blank" class="btn" style="color:#ffffff;">View / Download Resume &rarr;</a>
+                        </div>
+                      </div>`
+                    : isDataUrl
+                    ? `<div class="row">
+                        <div class="label">Resume / CV (PDF)</div>
+                        <div class="value" style="color: #0284c7; font-weight: 600;">
+                          &bull; Resume PDF is attached to this email
                         </div>
                       </div>`
                     : ""

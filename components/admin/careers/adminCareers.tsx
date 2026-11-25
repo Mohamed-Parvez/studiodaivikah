@@ -762,6 +762,7 @@ export default function AdminCareers() {
                           href={app.resumeUrl}
                           target="_blank"
                           rel="noopener noreferrer"
+                          download={app.resumeUrl.startsWith("data:") ? `${app.name.replace(/\s+/g, "_")}_Resume.pdf` : undefined}
                           className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-black text-white dark:bg-white dark:text-black font-medium hover:opacity-90"
                         >
                           <FileText className="w-3.5 h-3.5" /> Resume <ExternalLink className="w-3 h-3" />
