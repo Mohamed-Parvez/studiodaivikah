@@ -128,6 +128,7 @@ const jsonLd = {
     "https://www.linkedin.com/company/studio-daivikah/",
     "https://www.instagram.com/studio.daivikah",
     "https://www.facebook.com/share/15spjwC4w9/",
+    "https://www.youtube.com/@StudioDaivikah",
   ],
 };
 

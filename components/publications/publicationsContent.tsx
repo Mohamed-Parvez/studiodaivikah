@@ -81,7 +81,7 @@ const PublicationsContent = () => {
       )}
 
       {/* Main Title */}
-      <h1 className="text-center font-extrabold text-[45px] sm:text-[80px] md:text-[110px] lg:text-[130px] text-black tracking-tight my-10">
+      <h1 className="text-center font-extrabold text-[38px] sm:text-[54px] md:text-[68px] lg:text-[80px] text-black tracking-tight my-8 sm:my-10">
         PUBLICATIONS
       </h1>
 
@@ -110,32 +110,39 @@ const PublicationsContent = () => {
                 href={pub.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-200/80 flex flex-col h-full cursor-pointer"
+                className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-200/80 flex flex-col h-[460px] sm:h-[480px] cursor-pointer"
               >
                 {pub.image && (
-                  <div className="relative w-full h-[240px] overflow-hidden bg-gray-100">
+                  <div className="relative w-full h-[220px] overflow-hidden bg-gray-100 shrink-0 border-b border-gray-100">
                     <Image
                       src={pub.image}
                       alt={pub.title}
                       fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
                   </div>
                 )}
 
-                <div className="p-7 flex flex-col flex-grow justify-between">
-                  <div>
-                    <h3 className="text-xl font-bold text-gray-900 group-hover:text-black transition-colors leading-snug mb-3">
+                <div className="p-6 flex flex-col flex-1 justify-between overflow-hidden">
+                  <div className="overflow-hidden">
+                    <h3
+                      title={pub.title}
+                      className="text-lg sm:text-xl font-bold text-gray-900 group-hover:text-black transition-colors leading-snug line-clamp-2 mb-2"
+                    >
                       {pub.title}
                     </h3>
-                    <p className="text-sm text-gray-600 leading-relaxed font-normal">
+                    <p
+                      title={pub.description}
+                      className="text-sm text-gray-600 leading-relaxed font-normal line-clamp-3"
+                    >
                       {pub.description}
                     </p>
                   </div>
 
-                  <div className="mt-8 pt-4 border-t border-gray-100 flex items-center justify-between">
-                    <span className="text-xs text-gray-400 font-medium flex items-center gap-1 group-hover:text-black transition-colors">
+                  <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between shrink-0">
+                    <span className="text-xs font-semibold text-gray-500 group-hover:text-black transition-colors flex items-center gap-1.5">
                       Read Publication &rarr;
                     </span>
 

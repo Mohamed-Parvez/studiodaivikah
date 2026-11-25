@@ -123,16 +123,16 @@ const BlogDetailContent = () => {
           </div>
 
           {/* Project Header - Full Width */}
-          <div className="w-full py-6">
-            <div className="w-full space-y-8">
+          <div className="w-full py-4 sm:py-6">
+            <div className="w-full space-y-5">
               {/* Project Title */}
-              <h1 className="text-[32px] sm:text-[45px] md:text-[54px] lg:text-[64px] font-bold break-words leading-tight w-full text-black">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold break-words leading-tight w-full text-black">
                 {project.title && project.title.toUpperCase()}
               </h1>
 
               {/* Subtitle (First Paragraph) */}
               {subtitle && (
-                <div className="text-gray-700 text-base sm:text-lg md:text-xl leading-relaxed font-normal w-full">
+                <div className="text-gray-700 text-base sm:text-lg leading-relaxed font-normal w-full">
                   {subtitle.split("\n").map((line, index) => (
                     <p key={index} className="mb-4">
                       {line}
@@ -157,11 +157,11 @@ const BlogDetailContent = () => {
 
         {/* Blog Content - Remaining Paragraphs */}
         {remainingParagraphs.length > 0 && (
-          <div className="w-full py-6">
+          <div className="w-full py-4 sm:py-6">
             <div className="w-full">
               {remainingParagraphs.map((paragraph, index) => (
-                <div key={index + 1} className="mb-8 w-full">
-                  <p className="text-gray-700 text-base sm:text-lg md:text-xl leading-relaxed mb-6 break-words">
+                <div key={index + 1} className="mb-6 w-full">
+                  <p className="text-gray-700 text-base sm:text-lg leading-relaxed mb-6 break-words">
                     {paragraph}
                   </p>
                 </div>

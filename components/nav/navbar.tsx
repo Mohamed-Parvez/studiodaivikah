@@ -12,6 +12,7 @@ const navitems = [
   { name: "BLOG", href: "/blog" },
   { name: "FEATURED", href: "/featured" },
   { name: "PUBLICATIONS", href: "/publications" },
+  { name: "CAREERS", href: "/careers" },
   { name: "CONTACT", href: "/contact" },
 ];
 
@@ -48,12 +49,12 @@ const Navbar = () => {
           <Image src={"/images/logo.png"} height={70} width={70} alt="logo"/>
 
           {/* Desktop Navigation */}
-          <nav className="lg:flex gap-6 hidden">
+          <nav className="lg:flex gap-4 xl:gap-6 hidden">
             {navitems.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-white text-[13px] font-normal hover:text-gray-300 transition-colors duration-200"
+                className="text-white text-[12px] xl:text-[13px] font-normal hover:text-gray-300 transition-colors duration-200 whitespace-nowrap"
               >
                 {item.name}
               </Link>
@@ -114,6 +115,20 @@ const Navbar = () => {
                 width={16}
                 alt="facebook"
                 src="/icons/facebook_filled.svg"
+              />
+            </a>
+            <a
+              href="https://www.youtube.com/@StudioDaivikah"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="border border-gray-400/80 bg-white/10 p-2 rounded-full hover:bg-white/25 hover:border-white transition-all duration-300"
+              title="YouTube"
+            >
+              <Image
+                height={16}
+                width={16}
+                alt="youtube"
+                src="/icons/youtube_filled.svg"
               />
             </a>
           </div>
@@ -207,6 +222,20 @@ const Navbar = () => {
               width={18}
               alt="facebook"
               src="/icons/facebook_filled.svg"
+            />
+          </a>
+          <a
+            href="https://www.youtube.com/@StudioDaivikah"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="border border-gray-400/80 bg-white/10 p-2.5 rounded-full hover:bg-white/25 hover:border-white transition-all duration-300"
+            title="YouTube"
+          >
+            <Image
+              height={18}
+              width={18}
+              alt="youtube"
+              src="/icons/youtube_filled.svg"
             />
           </a>
         </div>

@@ -33,7 +33,7 @@ const Showcase = () => {
   return (
     <main className="max-w-[1240px] my-24 w-full px-10 flex-start flex-col gap-y-5">
       <div className="flex-start flex-col">
-        <h1 className="text-[40px] sm:text-[90px] md:text-[120px] lg:text-[140px] font-bold text-black">
+        <h1 className="text-[38px] sm:text-[54px] md:text-[68px] lg:text-[80px] font-bold text-black">
           SHOWCASE
         </h1>
         <p className="text-[24px] text-black font-normal">

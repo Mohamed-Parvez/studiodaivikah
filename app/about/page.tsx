@@ -38,7 +38,7 @@ const page = () => {
           sizes="100vw"
           className="object-cover opacity-50 z-0"
         />
-        <h1 className="text-center z-10 text-black font-extrabold text-[50px] sm:text-[90px] md:text-[120px] lg:text-[140px]">
+        <h1 className="text-center z-10 text-black font-extrabold text-[38px] sm:text-[54px] md:text-[68px] lg:text-[80px]">
           ABOUT
         </h1>
       </div>

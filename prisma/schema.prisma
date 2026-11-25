@@ -103,3 +103,43 @@ model Blog2 {
   
   @@map("blogs2")
 }
+
+model Job {
+  id               String           @id @default(cuid())
+  title            String
+  department       String           @default("Architecture")
+  location         String           @default("Chennai (On-site)")
+  jobType          String           @default("Full-time")
+  experience       String           @default("0-1 Years")
+  salary           String?
+  description      String
+  responsibilities String[]         @default([])
+  requirements     String[]         @default([])
+  benefits         String[]         @default([])
+  isOpen           Boolean          @default(true)
+  isHidden         Boolean          @default(false)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  
+  applications     JobApplication[]
+
+  @@map("jobs")
+}
+
+model JobApplication {
+  id           String   @id @default(cuid())
+  jobId        String
+  job          Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  name         String
+  email        String
+  phone        String
+  experience   String
+  portfolioUrl String?
+  resumeUrl    String?
+  message      String?
+  status       String   @default("PENDING")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("job_applications")
+}

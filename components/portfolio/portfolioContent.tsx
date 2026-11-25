@@ -80,8 +80,8 @@ const PortfolioContent = () => {
       <Navbar />
 
       {/* Main Header */}
-      <div className="w-full flex-center py-16 sm:py-28 overflow-hidden bg-white">
-        <h1 className="text-center text-black font-extrabold text-[42px] sm:text-[90px] md:text-[120px] lg:text-[140px] tracking-tight">
+      <div className="w-full flex-center py-12 sm:py-20 overflow-hidden bg-white">
+        <h1 className="text-center text-black font-extrabold text-[38px] sm:text-[54px] md:text-[68px] lg:text-[80px] tracking-tight">
           PORTFOLIO
         </h1>
       </div>
@@ -140,16 +140,13 @@ const PortfolioContent = () => {
                 </div>
                 <div className="p-6 flex flex-col flex-grow justify-between">
                   <div>
-                    <h3 className="text-xl font-bold text-gray-900 group-hover:text-black transition-colors uppercase leading-snug">
+                    <h3 className="text-lg sm:text-xl font-bold text-gray-900 group-hover:text-black transition-colors uppercase leading-snug">
                       {project.title}
                     </h3>
                   </div>
                   <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
                     <span className="text-xs text-gray-400 font-medium">
-                      {new Date(project.createdAt).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "short",
-                      })}
+                      {new Date(project.createdAt).getFullYear()}
                     </span>
                     <span className="text-xs font-semibold text-black group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
                       View Project &rarr;

@@ -55,7 +55,7 @@ const BlogContent = () => {
       <Navbar />
 
       {/* Main Title */}
-      <h1 className="text-center font-extrabold text-[45px] sm:text-[80px] md:text-[110px] lg:text-[130px] text-black tracking-tight my-10">
+      <h1 className="text-center font-extrabold text-[38px] sm:text-[54px] md:text-[68px] lg:text-[80px] text-black tracking-tight my-8 sm:my-10">
         BLOG
       </h1>
 
@@ -94,16 +94,12 @@ const BlogContent = () => {
                 </div>
 
                 <div className="mt-4 text-start w-full">
-                  <h3 className="text-lg md:text-xl font-bold text-gray-900 group-hover:text-black transition-colors duration-200 uppercase leading-snug">
+                  <h3 className="text-base sm:text-lg font-bold text-gray-900 group-hover:text-black transition-colors duration-200 uppercase leading-snug">
                     {item.title}
                   </h3>
                   <div className="flex items-center gap-2 mt-2">
                     <span className="text-xs text-gray-500">
-                      {new Date(item.createdAt).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })}
+                      {new Date(item.createdAt).getFullYear()}
                     </span>
                   </div>
                 </div>

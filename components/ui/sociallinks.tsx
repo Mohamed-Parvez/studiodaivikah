@@ -26,6 +26,12 @@ const FooterImageItems = [
     href: "https://www.facebook.com/share/15spjwC4w9/?mibextid=wwXIfr",
     src: "/icons/facebook_filled.svg",
   },
+  {
+    key: 5,
+    label: "YouTube",
+    href: "https://www.youtube.com/@StudioDaivikah",
+    src: "/icons/youtube_filled.svg",
+  },
 ];
 
 const SocialLinks = () => {
