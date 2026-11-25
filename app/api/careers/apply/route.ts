@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/Client";
 import nodemailer from "nodemailer";
 import path from "path";
+import fs from "fs";
 
 export async function POST(req: Request) {
   try {
@@ -66,7 +67,8 @@ export async function POST(req: Request) {
     });
 
     // Configure email settings
-    const adminEmail = process.env.EMAIL || "studiodavikah@gmail.com";
+    const senderEmail = process.env.EMAIL || "studiodavikah@gmail.com";
+    const adminRecipient = process.env.ADMIN_EMAIL || process.env.EMAIL || "studiodavikah@gmail.com";
     const appPassword = process.env.APP_PASS ? process.env.APP_PASS.replace(/\s+/g, "") : "";
 
     // Determine full resume URL and attachments
@@ -79,22 +81,33 @@ export async function POST(req: Request) {
         : `${protocol}://${host}${resumeUrl}`
       : null;
 
-    // Attach resume file if available
+    // Attach resume file safely if available
     const emailAttachments: any[] = [];
     if (resumeUrl) {
       try {
         const safeCandidateName = name.replace(/[^a-zA-Z0-9_-]/g, "_");
         if (isDataUrl) {
-          emailAttachments.push({
-            filename: `${safeCandidateName}_Resume.pdf`,
-            path: resumeUrl,
-          });
+          const commaIndex = resumeUrl.indexOf(",");
+          if (commaIndex !== -1) {
+            const mimeMatch = resumeUrl.match(/data:([^;]+);base64/);
+            const mimeType = mimeMatch ? mimeMatch[1] : "application/pdf";
+            const base64Data = resumeUrl.slice(commaIndex + 1);
+            emailAttachments.push({
+              filename: `${safeCandidateName}_Resume.pdf`,
+              content: Buffer.from(base64Data, "base64"),
+              contentType: mimeType,
+            });
+          }
         } else if (resumeUrl.startsWith("/uploads/resumes/")) {
           const localFilePath = path.join(process.cwd(), "public", resumeUrl);
-          emailAttachments.push({
-            filename: `${safeCandidateName}_Resume.pdf`,
-            path: localFilePath,
-          });
+          if (fs.existsSync(localFilePath)) {
+            emailAttachments.push({
+              filename: `${safeCandidateName}_Resume.pdf`,
+              path: localFilePath,
+            });
+          } else {
+            console.warn(`Local resume file does not exist at ${localFilePath}, skipping attachment`);
+          }
         } else if (resumeUrl.startsWith("http")) {
           emailAttachments.push({
             filename: `${safeCandidateName}_Resume.pdf`,
@@ -108,10 +121,15 @@ export async function POST(req: Request) {
 
     // Email to Admin notifying of new applicant
     const adminMailOptions = {
-      from: `"Studio Daivikah Careers" <${adminEmail}>`,
-      to: adminEmail,
+      from: `"Studio Daivikah Careers" <${senderEmail}>`,
+      to: adminRecipient,
+      replyTo: email,
       subject: `New Job Application: ${job.title} - ${name}`,
       attachments: emailAttachments,
+      headers: {
+        "X-Priority": "1",
+        "Importance": "high",
+      },
       html: `
         <!DOCTYPE html>
         <html lang="en">
@@ -207,7 +225,7 @@ export async function POST(req: Request) {
 
     // Thank you email to candidate
     const candidateMailOptions = {
-      from: `"Studio Daivikah" <${adminEmail}>`,
+      from: `"Studio Daivikah" <${senderEmail}>`,
       to: email,
       subject: `Thank you for applying to Studio Daivikah - ${job.title}`,
       html: `
@@ -271,14 +289,14 @@ export async function POST(req: Request) {
     // Send emails
     const emailStatus = { adminSent: false, candidateSent: false, error: null as string | null };
 
-    if (adminEmail && appPassword) {
+    if (senderEmail && appPassword) {
       try {
         const transporter = nodemailer.createTransport({
           host: "smtp.gmail.com",
           port: 465,
           secure: true,
           auth: {
-            user: adminEmail,
+            user: senderEmail,
             pass: appPassword,
           },
         });
@@ -289,15 +307,31 @@ export async function POST(req: Request) {
         ]);
 
         if (adminResult.status === "fulfilled") {
-          console.log("✅ Admin notification email sent successfully");
+          console.log("✅ Admin notification email sent successfully to", adminRecipient);
           emailStatus.adminSent = true;
         } else {
-          console.error("❌ Failed to send admin email:", adminResult.reason);
+          console.error("❌ Failed to send admin email with attachments:", adminResult.reason);
           emailStatus.error = String(adminResult.reason?.message || adminResult.reason);
+
+          // Retry admin email without attachments if attachment was the issue
+          if (emailAttachments.length > 0) {
+            console.warn("⚠️ Retrying admin email notification without attachments...");
+            try {
+              const retryAdminOptions = {
+                ...adminMailOptions,
+                attachments: [],
+              };
+              await transporter.sendMail(retryAdminOptions);
+              console.log("✅ Admin notification email sent successfully on retry (without attachments)");
+              emailStatus.adminSent = true;
+            } catch (retryErr: any) {
+              console.error("❌ Admin retry without attachments also failed:", retryErr);
+            }
+          }
         }
 
         if (candidateResult.status === "fulfilled") {
-          console.log("✅ Candidate confirmation email sent successfully");
+          console.log("✅ Candidate confirmation email sent successfully to", email);
           emailStatus.candidateSent = true;
         } else {
           console.error("❌ Failed to send candidate email:", candidateResult.reason);
