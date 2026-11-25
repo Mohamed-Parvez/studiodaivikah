@@ -483,7 +483,7 @@ const AdminTeam: React.FC = () => {
           teamMembers.map((member) => (
             <div
               key={member.id}
-              className={`bg-white rounded-lg shadow-lg overflow-hidden group transition-all ${
+              className={`bg-white rounded-lg shadow-lg overflow-hidden group transition-all max-w-[260px] w-full ${
                 member.isHidden ? "border-2 border-amber-400/80 bg-amber-50/20" : ""
               }`}
             >

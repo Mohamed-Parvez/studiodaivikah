@@ -108,7 +108,7 @@ const BlogDetailContent = () => {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen w-full max-w-[1240px] px-5 sm:px-8 xl:px-0 flex-col justify-between flex bg-white overflow-x-hidden">
+      <div className="min-h-screen w-full max-w-[1240px] px-5 sm:px-8 xl:px-0 flex-col justify-between flex bg-white overflow-x-hidden mx-auto">
         {/* Hero Section */}
         <div className="pt-20">
           {/* Back Button */}
@@ -143,12 +143,14 @@ const BlogDetailContent = () => {
 
               {/* First Image (Hero Image if present) */}
               {firstImage && (
-                <div className="w-full my-8 flex justify-center bg-gray-50/50 rounded-2xl border border-gray-100 overflow-hidden p-1 sm:p-2">
-                  <img
-                    src={firstImage}
-                    alt={project.title}
-                    className="w-full h-auto max-h-[700px] rounded-xl shadow-sm object-contain"
-                  />
+                <div className="w-full my-6 flex justify-start items-start">
+                  <div className="max-w-[320px] sm:max-w-[360px] md:max-w-[400px] w-auto flex justify-start bg-gray-50/60 rounded-xl border border-gray-100/80 overflow-hidden p-1.5 sm:p-2">
+                    <img
+                      src={firstImage}
+                      alt={project.title}
+                      className="w-auto h-auto max-h-[304px] sm:max-h-[336px] rounded-lg shadow-sm object-contain"
+                    />
+                  </div>
                 </div>
               )}
             </div>
@@ -173,16 +175,16 @@ const BlogDetailContent = () => {
         {/* Remaining Images Gallery */}
         {remainingImages.length > 0 && (
           <div className="w-full mt-8 mb-16">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+            <div className="flex flex-wrap gap-6 justify-start w-full">
               {remainingImages.map((image, index) => (
-                <div key={index + 1} className="group cursor-pointer w-full">
-                  <div className="relative overflow-hidden rounded-lg shadow-lg w-full">
+                <div key={index + 1} className="group cursor-pointer max-w-[320px] sm:max-w-[360px] md:max-w-[400px] w-full">
+                  <div className="relative overflow-hidden rounded-xl shadow-sm bg-gray-50/60 border border-gray-100/80 p-1.5 sm:p-2">
                     <img
                       src={image}
                       alt={`Gallery image ${index + 2}`}
-                      className="w-full max-w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"
+                      className="w-auto h-auto max-h-[304px] sm:max-h-[336px] rounded-lg object-contain transition-transform duration-300 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 group-hover:bg-opacity-10 transition-opacity duration-300" />
+                    <div className="absolute inset-0 group-hover:bg-opacity-10 transition-opacity duration-300 rounded-xl" />
                   </div>
                 </div>
               ))}

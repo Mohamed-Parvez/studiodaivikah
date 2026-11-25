@@ -31,9 +31,11 @@ const links = [
   { id: 3, href: "/contact", label: "Contact" },
   { id: 4, href: "/services", label: "Our Services" },
   { id: 5, href: "/about", label: "About Us" },
-  { id: 6, href: "/featured", label: "Featured" },
-  { id: 7, href: "/publications", label: "Publications" },
+  { id: 6, href: "/portfolio", label: "Portfolio" },
+  { id: 7, href: "/blog", label: "Blog" },
   { id: 8, href: "/careers", label: "Careers" },
+  { id: 9, href: "/featured", label: "Featured" },
+  { id: 10, href: "/publications", label: "Publications" },
 ];
 
 const MainFooter = () => {
