@@ -57,21 +57,14 @@ export async function POST(req: Request) {
       },
     });
 
-    // Configure nodemailer transporter
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
-      auth: {
-        user: process.env.EMAIL,
-        pass: process.env.APP_PASS,
-      },
-    });
+    // Configure email settings
+    const adminEmail = process.env.EMAIL || "studiodavikah@gmail.com";
+    const appPassword = process.env.APP_PASS ? process.env.APP_PASS.replace(/\s+/g, "") : "";
 
     // Email to Admin notifying of new applicant
     const adminMailOptions = {
-      from: `"Studio Daivikah Careers" <${process.env.EMAIL}>`,
-      to: process.env.EMAIL,
+      from: `"Studio Daivikah Careers" <${adminEmail}>`,
+      to: adminEmail,
       subject: `New Job Application: ${job.title} - ${name}`,
       html: `
         <!DOCTYPE html>
@@ -161,7 +154,7 @@ export async function POST(req: Request) {
 
     // Thank you email to candidate
     const candidateMailOptions = {
-      from: `"Studio Daivikah" <${process.env.EMAIL}>`,
+      from: `"Studio Daivikah" <${adminEmail}>`,
       to: email,
       subject: `Thank you for applying to Studio Daivikah - ${job.title}`,
       html: `
@@ -222,21 +215,56 @@ export async function POST(req: Request) {
       `,
     };
 
-    // Send emails asynchronously (catch errors so applicant submission still completes even if mail server fails)
-    try {
-      await Promise.all([
-        transporter.sendMail(adminMailOptions),
-        transporter.sendMail(candidateMailOptions),
-      ]);
-    } catch (mailError) {
-      console.error("Nodemailer sending error (non-fatal):", mailError);
+    // Send emails
+    const emailStatus = { adminSent: false, candidateSent: false, error: null as string | null };
+
+    if (adminEmail && appPassword) {
+      try {
+        const transporter = nodemailer.createTransport({
+          host: "smtp.gmail.com",
+          port: 465,
+          secure: true,
+          auth: {
+            user: adminEmail,
+            pass: appPassword,
+          },
+        });
+
+        const [adminResult, candidateResult] = await Promise.allSettled([
+          transporter.sendMail(adminMailOptions),
+          transporter.sendMail(candidateMailOptions),
+        ]);
+
+        if (adminResult.status === "fulfilled") {
+          console.log("✅ Admin notification email sent successfully");
+          emailStatus.adminSent = true;
+        } else {
+          console.error("❌ Failed to send admin email:", adminResult.reason);
+          emailStatus.error = String(adminResult.reason?.message || adminResult.reason);
+        }
+
+        if (candidateResult.status === "fulfilled") {
+          console.log("✅ Candidate confirmation email sent successfully");
+          emailStatus.candidateSent = true;
+        } else {
+          console.error("❌ Failed to send candidate email:", candidateResult.reason);
+          emailStatus.error = String(candidateResult.reason?.message || candidateResult.reason);
+        }
+      } catch (err: any) {
+        console.error("❌ Nodemailer transporter error:", err);
+        emailStatus.error = err?.message || String(err);
+      }
+    } else {
+      console.warn("⚠️ Cannot send emails: EMAIL or APP_PASS missing from .env");
+      emailStatus.error = "EMAIL or APP_PASS is not configured in .env";
     }
 
     return NextResponse.json(
       {
         success: true,
-        message: "Application submitted successfully! Check your email for confirmation.",
+        message: "Application submitted successfully!",
         applicationId: application.id,
+        emailStatus,
       },
       { status: 201 }
     );
