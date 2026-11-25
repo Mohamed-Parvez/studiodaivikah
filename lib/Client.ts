@@ -1,4 +1,4 @@
-// lib/prisma.ts
+// lib/Client.ts
 import { PrismaClient } from "@prisma/client";
 
 // Add a global type to avoid multiple client instances during development
