@@ -42,7 +42,7 @@ const MainFooter = () => {
       <div className="max-w-[1100px] w-full bg-black flex flex-col gap-8 items-center px-5 sm:px-10">
         <div className="flex items-start flex-col sm:flex-row justify-start sm:items-center sm:justify-between w-full gap-4">
           <Image src={"/images/logo.png"} height={70} width={70} alt="logo"/>
-          <div className="flex items-center justify-between w-full max-w-[240px] sm:max-w-[300px]">
+          <div className="flex flex-wrap items-center justify-start sm:justify-end gap-4 sm:gap-6 md:gap-8">
             {f1_items.map((items) => (
               <a
                 href={items.href}
