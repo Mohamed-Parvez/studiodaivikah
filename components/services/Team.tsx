@@ -133,9 +133,9 @@ const Team = () => {
             {/* Right: Details & Description */}
             <div className="w-full md:w-3/5 p-6 sm:p-8 flex flex-col justify-between max-h-[80vh] overflow-y-auto">
               <div>
-                <span className="text-xs font-semibold text-amber-700 tracking-wider uppercase">
+                {/* <span className="text-xs font-semibold text-amber-700 tracking-wider uppercase">
                   Studio Daivikah Team
-                </span>
+                </span> */}
                 <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mt-1">
                   {selectedMember.name || "Team Member"}
                 </h2>
@@ -148,7 +148,7 @@ const Team = () => {
                 {/* Description Content */}
                 <div className="mt-5 space-y-2">
                   <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                    About / Bio
+                    About
                   </h4>
                   {selectedMember.description ? (
                     <div className="text-gray-700 text-sm sm:text-base leading-relaxed font-normal whitespace-pre-line">
@@ -164,7 +164,7 @@ const Team = () => {
 
               {/* Modal Footer */}
               <div className="mt-8 pt-4 border-t border-gray-100 flex items-center justify-between text-xs text-gray-400">
-                <span>Studio Daivikah Practice</span>
+                <span></span>
                 <button
                   onClick={() => setSelectedMember(null)}
                   className="px-4 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium text-xs transition cursor-pointer"

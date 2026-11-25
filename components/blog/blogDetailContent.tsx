@@ -108,7 +108,7 @@ const BlogDetailContent = () => {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen w-full max-w-[1240px] px-5 sm:px-8 xl:px-0 flex-col justify-between flex bg-white overflow-x-hidden">
+      <div className="min-h-screen w-full max-w-[1240px] px-5 sm:px-8 xl:px-0 flex-col justify-between flex bg-white overflow-x-hidden mx-auto">
         {/* Hero Section */}
         <div className="pt-20">
           {/* Back Button */}
@@ -143,12 +143,14 @@ const BlogDetailContent = () => {
 
               {/* First Image (Hero Image if present) */}
               {firstImage && (
-                <div className="w-full my-8 flex justify-center bg-gray-50/50 rounded-2xl border border-gray-100 overflow-hidden p-1 sm:p-2">
-                  <img
-                    src={firstImage}
-                    alt={project.title}
-                    className="w-full h-auto max-h-[700px] rounded-xl shadow-sm object-contain"
-                  />
+                <div className="w-full my-6 flex justify-center">
+                  <div className="max-w-md sm:max-w-lg md:max-w-xl w-full flex justify-center bg-gray-50/60 rounded-2xl border border-gray-100/80 overflow-hidden p-2">
+                    <img
+                      src={firstImage}
+                      alt={project.title}
+                      className="w-auto h-auto max-h-[380px] sm:max-h-[420px] rounded-xl shadow-sm object-contain mx-auto"
+                    />
+                  </div>
                 </div>
               )}
             </div>
