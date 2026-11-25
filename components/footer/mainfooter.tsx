@@ -33,6 +33,7 @@ const links = [
   { id: 5, href: "/about", label: "About Us" },
   { id: 6, href: "/featured", label: "Featured" },
   { id: 7, href: "/publications", label: "Publications" },
+  { id: 8, href: "/careers", label: "Careers" },
 ];
 
 const MainFooter = () => {

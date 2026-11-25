@@ -6,6 +6,7 @@ import AdminShowcase from "./showcase/adminShowcase";
 import AdminTeam from "./team/adminTeam";
 import AdminBlog from "./blog/adminblog";
 import AdminPublications from "./publications/adminPublications";
+import AdminCareers from "./careers/adminCareers";
 
 const Admin = () => {
   const [currentpage, setCurrentpage] = useState("");
@@ -53,6 +54,12 @@ const Admin = () => {
             >
               Edit Blog
             </button>
+            <button
+              onClick={() => setCurrentpage("careers")}
+              className="text-[10px] sm:text-[14px] border cursor-pointer border-slate-300 rounded-full px-4 py-2 font-normal text-white bg-white/10 hover:bg-white/20"
+            >
+              Careers & Jobs
+            </button>
           </div>
         </div>
       </main>
@@ -69,10 +76,12 @@ const Admin = () => {
           <AdminTeam />
         ) : currentpage === "blog" ? (
           <AdminBlog />
+        ) : currentpage === "careers" ? (
+          <AdminCareers />
         ) : (
           <main className="flex-center w-full max-w-[1140px] h-screen">
             <p className="text-[20px] text-gray-500 font-normal">
-              Click on portfolio, featured, publications, showcase, team, or blog
+              Click on portfolio, featured, publications, showcase, team, blog, or careers
             </p>
           </main>
         )}

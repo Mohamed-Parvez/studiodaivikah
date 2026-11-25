@@ -12,6 +12,7 @@ const navitems = [
   { name: "BLOG", href: "/blog" },
   { name: "FEATURED", href: "/featured" },
   { name: "PUBLICATIONS", href: "/publications" },
+  { name: "CAREERS", href: "/careers" },
   { name: "CONTACT", href: "/contact" },
 ];
 
@@ -48,12 +49,12 @@ const Navbar = () => {
           <Image src={"/images/logo.png"} height={70} width={70} alt="logo"/>
 
           {/* Desktop Navigation */}
-          <nav className="lg:flex gap-6 hidden">
+          <nav className="lg:flex gap-4 xl:gap-6 hidden">
             {navitems.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-white text-[13px] font-normal hover:text-gray-300 transition-colors duration-200"
+                className="text-white text-[12px] xl:text-[13px] font-normal hover:text-gray-300 transition-colors duration-200 whitespace-nowrap"
               >
                 {item.name}
               </Link>
