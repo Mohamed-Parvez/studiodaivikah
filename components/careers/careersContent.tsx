@@ -230,16 +230,12 @@ export default function CareersContent() {
       <Navbar />
 
       {/* Hero Banner */}
-      <section className="w-full bg-black text-white py-14 sm:py-20 px-5 sm:px-10 flex flex-col items-center text-center">
-        <div className="max-w-4xl mx-auto space-y-4">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 text-xs tracking-wider uppercase font-semibold text-gray-300 border border-white/10">
-            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-            We Are Hiring Creative Minds
-          </div>
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight">
+      <section className="w-full bg-black text-white py-10 sm:py-14 px-5 sm:px-10 flex flex-col items-center text-center">
+        <div className="max-w-4xl mx-auto space-y-3">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
             JOIN OUR TEAM
           </h1>
-          <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed font-light">
+          <p className="text-xs sm:text-sm md:text-base text-gray-300 max-w-2xl mx-auto leading-relaxed font-light">
             Be part of an innovative studio shaping spaces through context, culture, and sustainable architecture. Discover opportunities that challenge and inspire you.
           </p>
 
