@@ -147,9 +147,9 @@ const Team = () => {
 
                 {/* Description Content */}
                 <div className="mt-5 space-y-2">
-                  <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                  {/* <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
                     About
-                  </h4>
+                  </h4> */}
                   {selectedMember.description ? (
                     <div className="text-gray-700 text-sm sm:text-base leading-relaxed font-normal whitespace-pre-line">
                       {selectedMember.description}

@@ -11,11 +11,11 @@ const jost = Jost({
 export const metadata: Metadata = {
   metadataBase: new URL("https://studiodaivikah.com"),
   title: {
-    default: "Studio Daivikah | Architecture & Interior Design Studio",
+    default: "Studio Daivikah | Architecture & Interior Design Firm | Chennai",
     template: "%s | Studio Daivikah",
   },
   description:
-    "Studio Daivikah is a premier architectural and interior design practice crafting innovative, sustainable, and timeless residential & commercial spaces.",
+    "Studio Daivikah | Architecture & Interior Design Firm | Chennai",
   keywords: [
     "Studio Daivikah",
     "Architectural Design",
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Studio Daivikah | Architecture & Interior Design Studio",
+    title: "Studio Daivikah | Architecture & Interior Design Firm | Chennai",
     description:
       "Concept to Creation — Studio Daivikah delivers innovative architectural, interior, and 3D visualization design services.",
     url: "https://studiodaivikah.com",
@@ -87,7 +87,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Studio Daivikah | Architecture & Interior Design Studio",
+    title: "Studio Daivikah | Architecture & Interior Design Firm | Chennai",
     description:
       "Concept to Creation — Studio Daivikah delivers innovative architectural, interior, and 3D visualization design services.",
     images: ["https://studiodaivikah.com/images/og-share.png"],
