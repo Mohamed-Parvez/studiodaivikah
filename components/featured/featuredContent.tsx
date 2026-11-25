@@ -80,7 +80,7 @@ const FeaturedContent = () => {
       )}
 
       {/* Main Title */}
-      <h1 className="text-center font-extrabold text-[50px] sm:text-[90px] md:text-[120px] lg:text-[140px] text-black tracking-tight my-10">
+      <h1 className="text-center font-extrabold text-[38px] sm:text-[54px] md:text-[68px] lg:text-[80px] text-black tracking-tight my-8 sm:my-10">
         FEATURED
       </h1>
 
@@ -127,7 +127,7 @@ const FeaturedContent = () => {
                 {/* Content */}
                 <div className="p-6 flex flex-col flex-grow justify-between">
                   <div>
-                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-black transition-colors leading-snug">
+                    <h3 className="text-base sm:text-lg font-bold text-gray-900 group-hover:text-black transition-colors leading-snug">
                       {item.title}
                     </h3>
                   </div>

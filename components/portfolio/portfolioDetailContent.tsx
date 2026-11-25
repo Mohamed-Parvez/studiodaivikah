@@ -118,7 +118,7 @@ const PortfolioDetailContent = () => {
 
           {/* Project Header */}
           <div className="w-full py-6">
-            <h1 className="text-[32px] sm:text-[45px] md:text-[54px] lg:text-[64px] font-bold text-left break-words w-full text-black">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-bold text-left break-words leading-tight w-full text-black">
               {project.title && project.title.toUpperCase()}
             </h1>
           </div>

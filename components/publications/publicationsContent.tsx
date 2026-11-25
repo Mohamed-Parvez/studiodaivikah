@@ -81,7 +81,7 @@ const PublicationsContent = () => {
       )}
 
       {/* Main Title */}
-      <h1 className="text-center font-extrabold text-[45px] sm:text-[80px] md:text-[110px] lg:text-[130px] text-black tracking-tight my-10">
+      <h1 className="text-center font-extrabold text-[38px] sm:text-[54px] md:text-[68px] lg:text-[80px] text-black tracking-tight my-8 sm:my-10">
         PUBLICATIONS
       </h1>
 

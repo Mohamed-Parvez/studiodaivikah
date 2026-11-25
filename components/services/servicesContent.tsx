@@ -177,7 +177,7 @@ const ServicesContent: React.FC = () => {
           </div>
 
           <div className="flex-center w-full">
-            <h1 className="text-center text-black font-extrabold text-[40px] sm:text-[80px] md:text-[100px] lg:text-[130px]">
+            <h1 className="text-center text-black font-extrabold text-[38px] sm:text-[54px] md:text-[68px] lg:text-[80px]">
               SERVICES
             </h1>
           </div>

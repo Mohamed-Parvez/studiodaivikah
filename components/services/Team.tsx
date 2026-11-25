@@ -59,7 +59,7 @@ const Team = () => {
 
   return (
     <main className="max-w-[1240px] my-24 w-full flex-start flex-col gap-y-3">
-      <h1 className="text-[70px] md:text-[120px] lg:text-[140px] font-bold text-black">
+      <h1 className="text-[38px] sm:text-[54px] md:text-[68px] lg:text-[80px] font-bold text-black">
         TEAM
       </h1>
       <div className="grid grid-cols-1 mt-10 sm:grid-cols-2 lg:grid-cols-3 gap-y-14 gap-6 w-full">

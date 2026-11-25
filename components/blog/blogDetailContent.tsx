@@ -126,7 +126,7 @@ const BlogDetailContent = () => {
           <div className="w-full py-6">
             <div className="w-full space-y-8">
               {/* Project Title */}
-              <h1 className="text-[32px] sm:text-[45px] md:text-[54px] lg:text-[64px] font-bold break-words leading-tight w-full text-black">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-bold break-words leading-tight w-full text-black">
                 {project.title && project.title.toUpperCase()}
               </h1>
 
