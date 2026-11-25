@@ -117,8 +117,8 @@ const PortfolioDetailContent = () => {
           </div>
 
           {/* Project Header */}
-          <div className="w-full py-6">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-bold text-left break-words leading-tight w-full text-black">
+          <div className="w-full py-4 sm:py-6">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-left break-words leading-snug w-full text-black">
               {project.title && project.title.toUpperCase()}
             </h1>
           </div>
@@ -126,11 +126,11 @@ const PortfolioDetailContent = () => {
 
         {/* Blog Content */}
         {blog && blog.paragraphs && blog.paragraphs.length > 0 && (
-          <div className="w-full py-6">
+          <div className="w-full py-4 sm:py-6">
             <div className="w-full">
               {blog.paragraphs.map((paragraph, index) => (
-                <div key={index} className="mb-8 w-full">
-                  <p className="text-gray-700 text-base sm:text-lg md:text-xl leading-relaxed mb-6 break-words">
+                <div key={index} className="mb-6 w-full">
+                  <p className="text-gray-700 text-base sm:text-lg leading-relaxed mb-6 break-words">
                     {paragraph}
                   </p>
                 </div>
