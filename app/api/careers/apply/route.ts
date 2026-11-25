@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/Client";
 import nodemailer from "nodemailer";
+import path from "path";
 
 export async function POST(req: Request) {
   try {
@@ -19,6 +20,13 @@ export async function POST(req: Request) {
     if (!jobId || !name || !email || !phone) {
       return NextResponse.json(
         { success: false, error: "Please fill in all required fields (Name, Email, Phone)" },
+        { status: 400 }
+      );
+    }
+
+    if (!resumeUrl) {
+      return NextResponse.json(
+        { success: false, error: "Please upload your resume (PDF) or provide a resume link" },
         { status: 400 }
       );
     }
@@ -61,11 +69,30 @@ export async function POST(req: Request) {
     const adminEmail = process.env.EMAIL || "studiodavikah@gmail.com";
     const appPassword = process.env.APP_PASS ? process.env.APP_PASS.replace(/\s+/g, "") : "";
 
+    // Determine full resume URL for clickable link
+    const host = req.headers.get("host") || "studiodaivikah.com";
+    const protocol = req.headers.get("x-forwarded-proto") || (host.includes("localhost") ? "http" : "https");
+    const fullResumeUrl = resumeUrl
+      ? resumeUrl.startsWith("http")
+        ? resumeUrl
+        : `${protocol}://${host}${resumeUrl}`
+      : null;
+
+    // Attach local resume if uploaded
+    const emailAttachments: any[] = [];
+    if (resumeUrl && resumeUrl.startsWith("/uploads/resumes/")) {
+      const localFilePath = path.join(process.cwd(), "public", resumeUrl);
+      emailAttachments.push({
+        path: localFilePath,
+      });
+    }
+
     // Email to Admin notifying of new applicant
     const adminMailOptions = {
       from: `"Studio Daivikah Careers" <${adminEmail}>`,
       to: adminEmail,
       subject: `New Job Application: ${job.title} - ${name}`,
+      attachments: emailAttachments,
       html: `
         <!DOCTYPE html>
         <html lang="en">
@@ -111,11 +138,11 @@ export async function POST(req: Request) {
                   <div class="value">${experience || "Fresher"}</div>
                 </div>
                 ${
-                  resumeUrl
+                  fullResumeUrl
                     ? `<div class="row">
-                        <div class="label">Resume / CV Link</div>
+                        <div class="label">Resume / CV ${emailAttachments.length > 0 ? "(Also attached to this email)" : "Link"}</div>
                         <div class="value">
-                          <a href="${resumeUrl}" target="_blank" class="btn" style="color:#ffffff;">View Resume / CV &rarr;</a>
+                          <a href="${fullResumeUrl}" target="_blank" class="btn" style="color:#ffffff;">View / Download Resume &rarr;</a>
                         </div>
                       </div>`
                     : ""

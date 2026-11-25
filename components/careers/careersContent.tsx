@@ -24,6 +24,9 @@ import {
   Mail,
   User,
   AlertCircle,
+  FileUp,
+  FileText,
+  Trash2,
 } from "lucide-react";
 
 export interface Job {
@@ -69,6 +72,9 @@ export default function CareersContent() {
     resumeUrl: "",
     message: "",
   });
+  const [resumeMode, setResumeMode] = useState<"upload" | "link">("upload");
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const [isUploadingResume, setIsUploadingResume] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [submitSuccess, setSubmitSuccess] = useState<boolean>(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -183,6 +189,9 @@ export default function CareersContent() {
     setApplyingJob(job);
     setSubmitSuccess(false);
     setSubmitError(null);
+    setResumeMode("upload");
+    setResumeFile(null);
+    setIsUploadingResume(false);
     setFormData({
       name: "",
       email: "",
@@ -202,12 +211,52 @@ export default function CareersContent() {
     setSubmitError(null);
 
     try {
+      let finalResumeUrl = formData.resumeUrl;
+
+      // Handle PDF upload if in upload mode
+      if (resumeMode === "upload") {
+        if (!resumeFile && !finalResumeUrl) {
+          setSubmitError("Please select a resume file (PDF/DOC) or switch to link tab.");
+          setIsSubmitting(false);
+          return;
+        }
+
+        if (resumeFile) {
+          setIsUploadingResume(true);
+          const uploadFormData = new FormData();
+          uploadFormData.append("file", resumeFile);
+
+          const uploadRes = await fetch("/api/careers/upload-resume", {
+            method: "POST",
+            body: uploadFormData,
+          });
+
+          const uploadData = await uploadRes.json();
+          setIsUploadingResume(false);
+
+          if (!uploadRes.ok || !uploadData.success) {
+            setSubmitError(uploadData.error || "Failed to upload resume file. Please try again or use the link option.");
+            setIsSubmitting(false);
+            return;
+          }
+
+          finalResumeUrl = uploadData.url;
+        }
+      } else {
+        if (!finalResumeUrl || !finalResumeUrl.trim()) {
+          setSubmitError("Please enter your resume / CV URL.");
+          setIsSubmitting(false);
+          return;
+        }
+      }
+
       const res = await fetch("/api/careers/apply", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           jobId: applyingJob.id,
           ...formData,
+          resumeUrl: finalResumeUrl,
         }),
       });
 
@@ -222,6 +271,7 @@ export default function CareersContent() {
       setSubmitError("Network error. Please try again later.");
     } finally {
       setIsSubmitting(false);
+      setIsUploadingResume(false);
     }
   };
 
@@ -935,27 +985,110 @@ export default function CareersContent() {
                     </select>
                   </div>
 
-                  {/* Resume Link */}
-                  <div>
-                    <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1">
-                      Resume / CV Link *
-                    </label>
-                    <div className="relative">
-                      <LinkIcon className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                      <input
-                        type="url"
-                        required
-                        placeholder="Google Drive, Dropbox, or LinkedIn PDF URL"
-                        value={formData.resumeUrl}
-                        onChange={(e) =>
-                          setFormData({ ...formData, resumeUrl: e.target.value })
-                        }
-                        className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-400"
-                      />
+                  {/* Resume Options: Upload PDF or Provide Link */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider">
+                        Resume / CV *
+                      </label>
+                      <div className="flex items-center bg-gray-100 p-0.5 rounded-lg text-xs">
+                        <button
+                          type="button"
+                          onClick={() => setResumeMode("upload")}
+                          className={`px-3 py-1 rounded-md font-medium transition-all ${
+                            resumeMode === "upload"
+                              ? "bg-white text-black shadow-xs font-semibold"
+                              : "text-gray-500 hover:text-black"
+                          }`}
+                        >
+                          Upload PDF
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setResumeMode("link")}
+                          className={`px-3 py-1 rounded-md font-medium transition-all ${
+                            resumeMode === "link"
+                              ? "bg-white text-black shadow-xs font-semibold"
+                              : "text-gray-500 hover:text-black"
+                          }`}
+                        >
+                          Paste Link
+                        </button>
+                      </div>
                     </div>
-                    <p className="text-[11px] text-gray-500 mt-1">
-                      Ensure the sharing link is set to &ldquo;Anyone with the link can view&rdquo;.
-                    </p>
+
+                    {resumeMode === "upload" ? (
+                      <div>
+                        {resumeFile ? (
+                          <div className="flex items-center justify-between p-3.5 rounded-xl border border-emerald-500/30 bg-emerald-50/50">
+                            <div className="flex items-center gap-3 overflow-hidden">
+                              <div className="w-9 h-9 rounded-lg bg-emerald-100 flex items-center justify-center shrink-0">
+                                <FileText className="w-5 h-5 text-emerald-600" />
+                              </div>
+                              <div className="truncate">
+                                <p className="text-xs font-semibold text-gray-900 truncate">
+                                  {resumeFile.name}
+                                </p>
+                                <p className="text-[11px] text-gray-500">
+                                  {(resumeFile.size / 1024).toFixed(0)} KB &bull; Selected
+                                </p>
+                              </div>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => setResumeFile(null)}
+                              className="p-1.5 text-gray-400 hover:text-rose-600 rounded-md transition-colors"
+                              title="Remove file"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        ) : (
+                          <label className="border-2 border-dashed border-gray-300 hover:border-gray-400 hover:bg-gray-50/60 rounded-xl p-5 flex flex-col items-center justify-center cursor-pointer transition-all">
+                            <FileUp className="w-7 h-7 text-gray-400 mb-1.5" />
+                            <p className="text-xs font-semibold text-gray-800">
+                              Click or drag & drop to upload resume
+                            </p>
+                            <p className="text-[11px] text-gray-500 mt-0.5">
+                              Supports PDF, DOC, DOCX (Max 10MB)
+                            </p>
+                            <input
+                              type="file"
+                              accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                              className="hidden"
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                  if (file.size > 10 * 1024 * 1024) {
+                                    alert("File size exceeds 10MB limit");
+                                    return;
+                                  }
+                                  setResumeFile(file);
+                                }
+                              }}
+                            />
+                          </label>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="space-y-1">
+                        <div className="relative">
+                          <LinkIcon className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                          <input
+                            type="url"
+                            placeholder="https://drive.google.com/... or LinkedIn / Dropbox link"
+                            value={formData.resumeUrl}
+                            onChange={(e) =>
+                              setFormData({ ...formData, resumeUrl: e.target.value })
+                            }
+                            className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-400"
+                          />
+                        </div>
+                        <p className="text-[11px] text-gray-500">
+                          Ensure the sharing link is set to &ldquo;Anyone with the link can view&rdquo;.
+                        </p>
+                      </div>
+                    )}
                   </div>
 
                   {/* Portfolio Link */}
@@ -1011,7 +1144,7 @@ export default function CareersContent() {
                       {isSubmitting ? (
                         <>
                           <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                          <span>Submitting...</span>
+                          <span>{isUploadingResume ? "Uploading Resume..." : "Submitting..."}</span>
                         </>
                       ) : (
                         <>
