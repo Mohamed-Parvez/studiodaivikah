@@ -9,14 +9,14 @@ import type { Metadata } from "next";
 import { staticImages } from "@/lib/staticImages";
 
 export const metadata: Metadata = {
-  title: "About Us | Architecture & Design Philosophy",
+  title: "About Us | Architecture & Interior Design Firm | Chennai",
   description:
     "Learn about Studio Daivikah — an architectural practice driven by thoughtful craftsmanship, contextual relevance, and the belief that great design must serve and inspire.",
   alternates: {
     canonical: "/about",
   },
   openGraph: {
-    title: "About Us | Architecture & Design Philosophy | Studio Daivikah",
+    title: "About Us | Architecture & Interior Design Firm | Chennai | Studio Daivikah",
     description:
       "Learn about Studio Daivikah — an architectural practice driven by thoughtful craftsmanship, contextual relevance, and the belief that great design must serve and inspire.",
     url: "https://studiodaivikah.com/about",
