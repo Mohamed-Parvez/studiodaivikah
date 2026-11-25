@@ -116,6 +116,20 @@ const Navbar = () => {
                 src="/icons/facebook_filled.svg"
               />
             </a>
+            <a
+              href="https://www.youtube.com/@StudioDaivikah"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="border border-gray-400/80 bg-white/10 p-2 rounded-full hover:bg-white/25 hover:border-white transition-all duration-300"
+              title="YouTube"
+            >
+              <Image
+                height={16}
+                width={16}
+                alt="youtube"
+                src="/icons/youtube_filled.svg"
+              />
+            </a>
           </div>
         </div>
       </header>
@@ -207,6 +221,20 @@ const Navbar = () => {
               width={18}
               alt="facebook"
               src="/icons/facebook_filled.svg"
+            />
+          </a>
+          <a
+            href="https://www.youtube.com/@StudioDaivikah"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="border border-gray-400/80 bg-white/10 p-2.5 rounded-full hover:bg-white/25 hover:border-white transition-all duration-300"
+            title="YouTube"
+          >
+            <Image
+              height={18}
+              width={18}
+              alt="youtube"
+              src="/icons/youtube_filled.svg"
             />
           </a>
         </div>

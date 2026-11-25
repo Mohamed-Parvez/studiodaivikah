@@ -224,6 +224,15 @@ export default function MaintenanceView() {
               >
                 <Image src="/icons/facebook_filled.svg" alt="Facebook" width={16} height={16} className="w-4 h-4 shrink-0" />
               </a>
+              <a
+                href="https://www.youtube.com/@StudioDaivikah"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="YouTube"
+                className="p-2.5 rounded-full bg-white/5 hover:bg-white/15 active:bg-white/25 border border-white/10 hover:border-amber-400/50 transition-all duration-300 cursor-pointer"
+              >
+                <Image src="/icons/youtube_filled.svg" alt="YouTube" width={16} height={16} className="w-4 h-4 shrink-0" />
+              </a>
             </div>
           </div>
         </div>

@@ -6,6 +6,8 @@ const f1_items = [
   { id: 1, label: "Linkedin", href: "https://www.linkedin.com/company/studio-daivikah/" },
   { id: 2, label: "Whatsapp", href: "https://wa.me/917550237036?text=Hello%20Studio%20Daivikah" },
   { id: 3, label: "Instagram", href: "https://www.instagram.com/studio.daivikah" },
+  { id: 4, label: "Facebook", href: "https://www.facebook.com/share/15spjwC4w9/?mibextid=wwXIfr" },
+  { id: 5, label: "YouTube", href: "https://www.youtube.com/@StudioDaivikah" },
 ];
 
 const address = [

@@ -83,6 +83,20 @@ const Hero = () => {
                 src={"/icons/facebook_filled.svg"}
               />
             </a>
+            <a
+              href="https://www.youtube.com/@StudioDaivikah"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-white/15 backdrop-blur-md border border-white/40 p-2 rounded-full hover:bg-white/30 transition-all duration-300"
+              title="YouTube"
+            >
+              <Image
+                height={16}
+                width={16}
+                alt="youtube"
+                src={"/icons/youtube_filled.svg"}
+              />
+            </a>
           </div>
         </div>
       </div>

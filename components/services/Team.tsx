@@ -86,7 +86,7 @@ const Team = () => {
                 </h3>
               )}
               {member.role && (
-                <p className="text-amber-400 text-sm font-medium tracking-wide">
+                <p className="text-white text-sm font-medium tracking-wide">
                   {member.role}
                 </p>
               )}
