@@ -62,12 +62,12 @@ const Team = () => {
       <h1 className="text-[38px] sm:text-[54px] md:text-[68px] lg:text-[80px] font-bold text-black">
         TEAM
       </h1>
-      <div className="grid grid-cols-1 mt-10 sm:grid-cols-2 lg:grid-cols-3 gap-y-14 gap-6 w-full">
+      <div className="grid grid-cols-1 mt-10 sm:grid-cols-2 lg:grid-cols-3 gap-y-10 gap-6 w-full">
         {teamMembers.map((member) => (
           <div
             key={member.id}
             onClick={() => setSelectedMember(member)}
-            className="relative overflow-hidden shadow-lg group cursor-pointer rounded-xl bg-gray-100"
+            className="relative overflow-hidden shadow-lg group cursor-pointer rounded-xl bg-gray-100 max-w-[310px] w-full"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -75,7 +75,7 @@ const Team = () => {
               alt={member.name || "Team member"}
               loading="lazy"
               decoding="async"
-              className="w-full h-80 sm:h-96 object-cover transition-transform duration-500 group-hover:scale-105"
+              className="w-full h-[256px] sm:h-[308px] object-cover transition-transform duration-500 group-hover:scale-105"
             />
 
             {/* Name and Role Overlay on Hover (no description on thumbnail as requested) */}
@@ -121,7 +121,7 @@ const Team = () => {
             </button>
 
             {/* Left: Image */}
-            <div className="w-full md:w-2/5 relative bg-gray-100 min-h-[300px] md:min-h-[420px]">
+            <div className="w-full md:w-2/5 relative bg-gray-100 min-h-[240px] md:min-h-[336px]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={selectedMember.image}
