@@ -23,9 +23,33 @@ export const metadata: Metadata = {
   },
 };
 
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: "https://studiodaivikah.com",
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "About Us",
+      item: "https://studiodaivikah.com/about",
+    },
+  ],
+};
+
 const page = () => {
   return (
-    <section className="w-full pt-20 flex-col flex-center">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <section className="w-full pt-20 flex-col flex-center">
       <Navbar />
       <div className="relative w-full flex-center py-28 min-h-[380px] sm:min-h-[460px] overflow-hidden">
         <Image
@@ -81,6 +105,7 @@ const page = () => {
       <MainFooter />
       <Footer />
     </section>
+    </>
   );
 };
 

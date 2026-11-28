@@ -30,12 +30,35 @@ const jsonLd = {
   },
 };
 
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: "https://studiodaivikah.com",
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Careers",
+      item: "https://studiodaivikah.com/careers",
+    },
+  ],
+};
+
 export default function CareersPage() {
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <CareersContent />
     </>
